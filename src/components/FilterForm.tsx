@@ -1,123 +1,93 @@
 import React, { useState } from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
 import { FetchDataService } from '../services/FetchDataService';
-import { DataParams } from '../models/DataParams';
+import DataParams from '../models/DataParams';  // Import the default export
+import '../styles/filterform.css';  // Ensure to create and import this CSS file for additional styles
 
 const FilterForm: React.FC = () => {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [fixedPrice, setFixedPrice] = useState<number | ''>('');
-  const [housingType, setHousingType] = useState('');
-  const [electricCar, setElectricCar] = useState(false);
-  const [workTime, setWorkTime] = useState('');
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [resultData, setResultData] = useState<null | {
+    totalConsumptionPrice: number,
+    totalFixedPrice: number,
+    cheaperOption: string
+  }>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (startDate && endDate && fixedPrice !== '') {
+    if (fixedPrice !== '' && csvFile) {
       const params: DataParams = {
-        startDate,
-        endDate,
         fixedPrice: Number(fixedPrice),
-        housingType,
-        electricCar,
-        workTime
+        csvFile
       };
 
       try {
         const data = await FetchDataService(params);
-        console.log(data); 
+        setResultData(data);
+        setError(null);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setError('Failed to fetch data. Please try again.');
+        setResultData(null);
       }
     } else {
       alert('Please fill in the required fields.');
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setCsvFile(e.target.files[0]);
+    }
+  };
+
   return (
-    <Container>
-      <Form onSubmit={handleSubmit}>
-        <Row className="mb-3">
-          <Form.Group as={Col} controlId="startDate">
-            <Form.Label>Start Date:</Form.Label>
-            <Form.Control
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              required
-            />
-          </Form.Group>
+    <Container className="filter-form-container">
+      <div className="section">
+        <h2>Compare your electricity consumption with fixed and spot electricity!</h2>
+        <Form onSubmit={handleSubmit}>
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="fixedPrice">
+              <Form.Label>Fixed Price:</Form.Label>
+              <Form.Control
+                type="number"
+                value={fixedPrice}
+                onChange={(e) => setFixedPrice(Number(e.target.value))}
+                required
+              />
+            </Form.Group>
+          </Row>
 
-          <Form.Group as={Col} controlId="endDate">
-            <Form.Label>End Date:</Form.Label>
-            <Form.Control
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              required
-            />
-          </Form.Group>
-        </Row>
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="csvFile">
+              <Form.Label>Your data:</Form.Label>
+              <Form.Control
+                type="file"
+                accept=".csv"
+                onChange={handleFileChange}
+                required
+              />
+            </Form.Group>
+          </Row>
 
-        <Row className="mb-3">
-          <Form.Group as={Col} controlId="fixedPrice">
-            <Form.Label>Fixed Price:</Form.Label>
-            <Form.Control
-              type="number"
-              value={fixedPrice}
-              onChange={(e) => setFixedPrice(Number(e.target.value))}
-              required
-            />
-          </Form.Group>
-        </Row>
+          <Button variant="primary" type="submit" className="calculate-btn">
+            Calculate
+          </Button>
+        </Form>
 
-        <Row className="mb-3">
-          <Form.Group as={Col} controlId="housingType">
-            <Form.Label>Housing Type:</Form.Label>
-            <Form.Control
-              as="select"
-              value={housingType}
-              onChange={(e) => setHousingType(e.target.value)}
-            >
-              <option value="">Select...</option>
-              <option value="DetachedHouse">Omakotitalo</option>
-              <option value="ApartmentBuiding">Kerrostalo</option>
-              <option value="TownHouse">Rivitalo</option>
-            </Form.Control>
-          </Form.Group>
-        </Row>
+        {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
 
-        <Row className="mb-3">
-          <Form.Group as={Col} controlId="electricCar">
-            <Form.Check
-              type="checkbox"
-              label="Electric Car Availability"
-              checked={electricCar}
-              onChange={(e) => setElectricCar(e.target.checked)}
-            />
-          </Form.Group>
-        </Row>
-
-        <Row className="mb-3">
-          <Form.Group as={Col} controlId="workTime">
-            <Form.Label>Work Time:</Form.Label>
-            <Form.Control
-              as="select"
-              value={workTime}
-              onChange={(e) => setWorkTime(e.target.value)}
-            >
-              <option value="">Select...</option>
-              <option value="dayWorker">Päivätyöläinen</option>
-              <option value="eveningWorker">Ilta</option>
-            </Form.Control>
-          </Form.Group>
-        </Row>
-
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-      </Form>
+        {resultData && (
+          <div className="result-data mt-4">
+            <h3>Calculation Results:</h3>
+            <p>Pörssisähkön hinta: {resultData.totalConsumptionPrice.toFixed(2)}</p>
+            <p>Kiinteän sähkön hinta:: {resultData.totalFixedPrice.toFixed(2)}</p>
+            <p>Halvempi vaihtoehto: {resultData.cheaperOption}</p>
+          </div>
+        )}
+      </div>
     </Container>
   );
 };

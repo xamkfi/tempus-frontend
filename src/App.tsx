@@ -15,6 +15,7 @@ const App: React.FC = () => {
         <Row className="justify-content-center">
           <Col md={6}>
             <FilterForm />
+
           </Col>
         </Row>
       </Container>

@@ -1,0 +1,31 @@
+/* FilterForm.css */
+.filter-form-container {
+    background-color: #f5ba3c;
+    color:black;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .section {
+    margin-bottom: 30px;
+  }
+  
+  .section h2 {
+    margin-bottom: 20px;
+  }
+  
+  .form-label {
+    color: #fff;
+  }
+  
+  .calculate-btn {
+    width: 100%;
+    background-color: #f5ba3c;
+    border-color: #f5ba3c;
+  }
+  
+  .calculate-btn:hover {
+    background-color: #f5ba3c;
+    border-color: #f5ba3c;
+  }
+  

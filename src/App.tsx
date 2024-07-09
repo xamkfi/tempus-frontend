@@ -1,5 +1,6 @@
 import React from 'react';
 import FilterForm from './components/FilterForm';
+import DirectiveCalculation from './components/DirectiveCalculation';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
 
@@ -15,7 +16,7 @@ const App: React.FC = () => {
         <Row className="justify-content-center">
           <Col md={6}>
             <FilterForm />
-
+            <DirectiveCalculation />
           </Col>
         </Row>
       </Container>

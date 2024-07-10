@@ -37,20 +37,3 @@ export interface MonthlyData {
 }
 
 export default FormDataParams;
-
-// dailyData?: Array<{
-//   day: string;
-//   spotPrice: number;
-//   fixedPrice: number;
-//   consumption: number;  // Lisää tämä rivi
-// }>;
-
-// CalculationResult?: Array<{
-//   TotalFixedPriceCost: number;
-//   TotalSpotPriceCost: number;
-//   TotalDirectiveConsumption: number;
-//   CheaperOption: string;
-//   CostDifference: number;
-//   AverageHourlySpotPrice: number;
-//   MonthlyData: MonthlyData[];
-// }>

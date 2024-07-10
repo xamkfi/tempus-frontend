@@ -1,6 +1,4 @@
 export interface DataParams {
-  // startDate: string;
-  // endDate: string;
   fixedPrice: number;
   csvFile?: File;   
   totalConsumptionPrice?: number;
@@ -9,4 +7,4 @@ export interface DataParams {
 
 }
 
-export default DataParams; // Exporting the interface as default
+export default DataParams;

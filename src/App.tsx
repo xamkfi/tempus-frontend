@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Instructions from './components/Instructions'; // Correct the path if necessary
 
 const App: React.FC = () => {
+  //test commit
   return (
     <div className="App">
       <Container fluid>

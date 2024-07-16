@@ -1,16 +1,33 @@
 export interface DataParams {
-  // startDate: string;
-  // endDate: string;
   fixedPrice: number;
-  // housingType?: string;
-  // electricCarCount?: number; // Changed to lowercase "number"
-  // numberOfPeople: number;    // Changed to lowercase "number"
-  // heatingType: string;
-  // workTime?: string;
-  csvFile?: File;   
-  totalConsumptionPrice?: number;
+  csvFile?: File;
+  totalSpotPrice?: number;
   totalFixedPrice?: number;
   cheaperOption?: string;
+  totalConsumption?: number; 
+  startDate?: string;  
+  endDate?: string;    
+  priceDifference?: number;
+  dailyData?: Array<{
+    day: string;
+    spotPrice: number;
+    fixedPrice: number;
+    consumption: number;  
+    
+  }>;
+  weeklyData?: Array<{
+    year: number;
+    week: number;
+    spotPrice: number;
+    fixedPrice: number;
+    consumption: number;  
+  }>;
+  monthlyData?: Array<{
+    year: number;
+    month: number;
+    spotPrice: number;
+    fixedPrice: number;
+    consumption: number;  
+  }>;
 }
-
-export default DataParams; // Exporting the interface as default
+export default DataParams;

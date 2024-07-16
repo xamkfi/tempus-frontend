@@ -30,4 +30,5 @@ export interface DataParams {
     consumption: number;  
   }>;
 }
+
 export default DataParams;

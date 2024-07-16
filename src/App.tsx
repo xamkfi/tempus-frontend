@@ -1,5 +1,6 @@
 import React from 'react';
 import FilterForm from './components/FilterForm';
+import DirectiveCalculation from './components/DirectiveCalculation';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -15,8 +16,12 @@ const App: React.FC = () => {
           </Col>
         </Row>
         <Row className="justify-content-center">
+
           <Col md={8}> 
             
+            <FilterForm />
+            <DirectiveCalculation />
+
           </Col>
         </Row>
       </Container>

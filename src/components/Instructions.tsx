@@ -1,46 +1,51 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import '../styles/instructions.css';
-
+import Header from './Header'; // Import the Header component
+import Footer from './Footer';
 const Instructions: React.FC = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleBackClick = () => {
         navigate('/');
     };
 
     return (
-        <div className="instructions">
-            <div className="instruction-step">
-            <p>Siirry  
-            <a href="#" onClick={(event) => {
-            event.preventDefault();
-            window.open("https://oma.datahub.fi/#/login?returnUrl=%2F", "_blank");
-            }}> Fingrid asiakas portaaliin </a> ja kirjaudu sisään
-            </p>
-            <img src="./assets/FinGridLogIn.png" alt="Fingrid login" />
+        <>
+            <Header /> {/* Keep the Header component outside the instructions container */}
+            <div className="instructions-container"> {/* New container for instructions content */}
+                <div className="instructions">
+                    <h2>{t('instructionsTitle')}</h2>
+                    <div className="instruction-step">
+                        <p dangerouslySetInnerHTML={{ __html: t('step1') }} />
+                        <img src="./assets/FinGridLogIn.png" alt={t('step1ImgAlt')} />
+                    </div>
+                    <div className="instruction-step">
+                        <p>{t('step2')}</p>
+                        <img src="./assets/selectAddressEdited.png" alt={t('step2ImgAlt')} />
+                    </div>
+                    <div className="instruction-step">
+                        <p dangerouslySetInnerHTML={{ __html: t('step3') }} />
+                        <img src="./assets/selectNrG&DownloadInformation.png" alt={t('step3ImgAlt')} />
+                    </div>
+                    <div className="instruction-step">
+                        <p>{t('step4')}</p>
+                        <img src="./assets/selectDateAndAccountingPointEdited.png" alt={t('step4ImgAlt')} />
+                    </div>
+                    <div className="instruction-step">
+                        <p dangerouslySetInnerHTML={{ __html: t('step5') }} />
+                    </div>
+                    <div className="instruction-step">
+                        <p dangerouslySetInnerHTML={{ __html: t('step6') }} />
+                    </div>
+                    <button className="back-button" onClick={handleBackClick}>{t('backButton')}</button>
+                </div>
             </div>
-            
-            <div className="instruction-step">
-                <p>Valitse kiinteistö, jonka sähkönkulutusta haluat seurata</p>
-                <img src="./assets/selectAddressEdited.png" alt="Fingrid Energy Report" />
-            </div>
-            <div className="instruction-step">
-                <p>Valitse <b>Energy Reporting</b> ja siirry <b>Download Information</b> ikkunaan</p>
-                <img src="./assets/selectNrG&DownloadInformation.png" alt="Fingrid Energy Report" />
-            </div>
-            <div className="instruction-step">
-                <p>Valitse haluamasi aikaväli ja kiinteistö</p>
-                <img src="./assets/selectDateAndAccountingPointEdited.png" alt="Fingrid Energy Report" />
-            </div>
-            <div className="instruction-step">
-                <p>Paina <b>Download</b> painiketta. Tämä lataa <b>sähkönkulutustiedoston</b> laitteellesi, jonka voit asettaa laskuriin</p>
-            </div>
-            <div className="instruction-step">
-                <p><b>Ethän tee muutoksia</b> tiedostoon, se voi vaikuttaa laskentaan!</p>
-            </div>
-            <button className="back-button" onClick={handleBackClick}>Takaisin laskuriin </button>
-        </div>
+
+            <Footer />
+        </>
     );
 };
 

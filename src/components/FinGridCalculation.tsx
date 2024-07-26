@@ -8,9 +8,11 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Lottie from 'lottie-react';
 import animationData from './loadingAnimation.json';
+import { useTranslation } from 'react-i18next';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 const FilterForm: React.FC = () => {
+  const { t } = useTranslation();
   const [fixedPrice, setFixedPrice] = useState<number | ''>(10);
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [resultData, setResultData] = useState<DataParams | null>(null);
@@ -23,7 +25,7 @@ const FilterForm: React.FC = () => {
   const [showFixedPrice, setShowFixedPrice] = useState(true);
   const [showConsumption, setShowConsumption] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  
   
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,10 +35,13 @@ const FilterForm: React.FC = () => {
     setError(null);
   
     if (fixedPrice !== '' && csvFile) {
+      setLoading(true);
       const params: DataParams = {
+        
         fixedPrice: Number(fixedPrice),
         csvFile
-      };
+      }
+ 
   
       try {
         const data = await FetchDataService(params);
@@ -58,6 +63,7 @@ const FilterForm: React.FC = () => {
       }
     } else {
       alert('Please fill in the required fields.');
+      setLoading(false);
     }
   };
 
@@ -71,7 +77,9 @@ const FilterForm: React.FC = () => {
     setTimePeriod(period);
     setCurrentDayIndex(0);
     setCurrentWeekIndex(0);
-    setCurrentYear(new Date().getFullYear());
+    const firstyear = new Date().getFullYear() - 1;
+    setCurrentYear(firstyear);
+    
 
     
   };
@@ -119,7 +127,7 @@ const FilterForm: React.FC = () => {
       consumptions = days.map(data => data.consumption);
     } else if (timePeriod === 'week' && resultData.weeklyData) {
       const weeks = resultData.weeklyData.slice(currentWeekIndex, currentWeekIndex + 15);
-      labels = weeks.map(data => `Viikko ${data.week}, ${data.year}`);
+      labels = weeks.map(data => `Vk ${data.week}, ${data.year}`);
       spotPrices = weeks.map(data => data.spotPrice);
       fixedPrices = weeks.map(data => data.fixedPrice);
       consumptions = weeks.map(data => data.consumption);
@@ -127,6 +135,7 @@ const FilterForm: React.FC = () => {
       const months = resultData.monthlyData
         .sort((a, b) => a.year - b.year) // Sort by year
         .filter(data => data.year === currentYear);
+        
       labels = months.map(data => `${data.month}/${data.year}`);
       spotPrices = months.map(data => data.spotPrice);
       fixedPrices = months.map(data => data.fixedPrice);
@@ -136,21 +145,21 @@ const FilterForm: React.FC = () => {
     const datasets: any[] = [];
     if (showSpotPrice) {
       datasets.push({
-        label: 'Pörssi hinta',
+        label: t('ChartSpotPrice'),
         backgroundColor: '#4682B4',
         data: spotPrices,
       });
     }
     if (showFixedPrice) {
       datasets.push({
-        label: 'Kiinteä hinta',
+        label: t('fixedPrice'),
         backgroundColor: '#DC143C',
-        data: fixedPrices,
+        data: fixedPrices
       });
     }
     if (showConsumption) {
       datasets.push({
-        label: 'Kulutus',
+        label: t('consumption'),
         backgroundColor: '#32CD32',
         data: consumptions,
         datalabels: {
@@ -202,27 +211,32 @@ const FilterForm: React.FC = () => {
   return (
     <Container className="filter-form-container">
       <div className="section">
-        <h2>Vertaa sähkön hintaa sinun Kulutustiedostosi perusteella!</h2>
+        <h2>{t('compareElectricityPrice')}</h2>
         <div className="intro-text">
-          <p>Tämä palvelu laskee sinun sähkönkulutuksesi perusteella hinnan kiinteälle ja pörssisähkölle.</p>
-          <p>Lataa sinun sähkönkulutus tiedostosi <a href="#" onClick={(event) => {
-            event.preventDefault();
-            window.open("https://oma.datahub.fi/#/login?returnUrl=%2F", "_blank");
-            }}>Fingridin asiakas portaalista</a>. <b>Lue</b> kulutustiedoston latausohjeet <a href='instructions'>täältä</a></p>
-            
-          <p>Aseta haluamasi kiinteän sähkön hinta <b>snt/kwh.</b></p>
-          <p>Lataa sähkönkulutus tiedostosi ja tarkastele tuloksia <b>kuukausi, viikko ja päivä tasolla!</b></p>
-          
+          <p>{t('introText1')}</p>
+          <p>
+            {t('introText2')}{' '}
+            <a href="#" onClick={(event) => {
+              event.preventDefault();
+              window.open("https://oma.datahub.fi/#/login?returnUrl=%2F", "_blank");
+            }}>
+              {t('Fingridcustomerportal')}
+            </a>
+            . <b>{t('readInstructions')} </b>
+            <a href='instructions'>{t('here')}</a>
+          </p>
+          <p>{t('setFixedPrice')} <b>snt/kwh.</b></p>
+          <p>{t('uploadAndViewResults')}<b>{t('uploadAndViewResultsBold')}</b></p>
         </div>
       </div>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col xs={12} md={6} className="mb-3">
             <Form.Group controlId="fixedPrice">
-              <Form.Label>Kiinteä hinta (snt/kWh):</Form.Label>
+              <Form.Label>{t('enterFixedPrice')}{t('unit')}</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Syötä kiinteä hinta"
+                placeholder={t('enterFixedPrice')}
                 value={fixedPrice}
                 onChange={(e) => setFixedPrice(parseFloat(e.target.value) || '')}
               />
@@ -230,7 +244,7 @@ const FilterForm: React.FC = () => {
           </Col>
           <Col xs={12} md={6} className="mb-3">
             <Form.Group controlId="csvFile">
-              <Form.Label>Valitse sähkönkulutustiedosto(.csv)</Form.Label>
+              <Form.Label>{t('csvFile')}:</Form.Label>
               <Form.Control
                 type="file"
                 accept=".csv"
@@ -240,106 +254,103 @@ const FilterForm: React.FC = () => {
           </Col>
           <Col xs={12} className="mb-3">
             <Button variant="primary" type="submit" className="submit-button">
-              Hae tiedot
+              {t('submit')}
             </Button>
           </Col>
         </Row>
       </Form>
       {loading && (
-  <div className="loading-animation-container">
-    <div className="loading-animation">
-    <Lottie animationData={animationData} loop={true} />
-      </div>
-    
-  </div>
-)}
+        <div className="loading-animation-container">
+          <div className="loading-animation">
+            <Lottie animationData={animationData} loop={true} />
+          </div>
+        </div>
+      )}
       {error && <Alert variant="danger">{error}</Alert>}
       {resultData && (
   <>
     <div className="result-data-container">
-      <div className="result-data-summary">
-        <h3>Tulokset</h3>
-        <p>Kulutustiedostosi mukaan aikavälillä </p>
-        <b>{resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</b>
-        <p>
-          Sinulle halvempi vaihtoehto on
-          <b>{resultData.cheaperOption === 'Spot Price' ? ' Pörssi-sähkö' : ' Kiinteä-sähkö'}</b>
-        </p>
-        <p className="price-difference">Hintaero: <b>{resultData.priceDifference?.toFixed(2) ?? 'N/A'} €</b></p>
-      </div>
-      <div className="result-data-keywords">
-        <p>Kulutus: {resultData.totalConsumption?.toFixed(2) ?? 'N/A'} kWh</p>
-        <p><b>Pörssi-sähkön hinta kulutukselle: {resultData.totalSpotPrice?.toFixed(2) ?? 'N/A'} €</b></p>
-        <p><b>Kiinteän-sähkön hinta kulutukselle: {resultData.totalFixedPrice?.toFixed(2) ?? 'N/A'} €</b></p>
-        <p><b>Aikaväli: {resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</b></p>
-      </div>
+    <div className="result-data-summary">
+  <h3>{t('results')}</h3>
+  <p>{t('timeperiodinfo')} <br></br> <b>{resultData.startDate ? ('') : ''} {resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</b></p>
+  <p>
+     {t('cheaperOption')}<b> {resultData.cheaperOption === 'Spot Price' ? t('spotElectricity') : t('fixedElectricity')}</b>
+  </p>
+  <p className="price-difference">{t('priceDifference')}: <b>{resultData.priceDifference?.toFixed(2) ?? 'N/A'} €</b></p>
+</div>
+<div className="result-data-keywords">
+  <p>{t('totalConsumption')}: <span className="dynamic-value">{resultData.totalConsumption?.toFixed(2) ?? 'N/A'}</span> kWh</p>
+  <p><b>{t('spotElectricityPrice')}: <span className="dynamic-value">{resultData.totalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</b></p>
+  <p><b>{t('fixedElectricityPrice')}: <span className="dynamic-value">{resultData.totalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</b></p>
+  <p><b>{t('time')}: <span className="dynamic-value">{resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</span></b></p>
+</div>
     </div>
   </>
 )}
       
       {resultData && (
         <>
-           <div className="graph-options">
-        <Form.Check
-          type="checkbox"
-          label="Näytä pörssihinta"
-          checked={showSpotPrice}
-          onChange={() => setShowSpotPrice(!showSpotPrice)}
-          className="form-check"
-        />
-        <Form.Check
-          type="checkbox"
-          label="Näytä kiinteä hinta"
-          checked={showFixedPrice}
-          onChange={() => setShowFixedPrice(!showFixedPrice)}
-          className="form-check"
-        />
-        <Form.Check
-          type="checkbox"
-          label="Näytä kulutus"
-          checked={showConsumption}
-          onChange={() => setShowConsumption(!showConsumption)}
-          className="form-check"
-        />
-      </div>
-          <div className="chart-controls">
-            {timePeriod === 'day' && (
-              <div className="day-period-controls">
-                <Button onClick={handlePrevDayPeriod} disabled={currentDayIndex === 0}>
-                  Edellinen
-                </Button>
-                <Button onClick={handleNextDayPeriod} disabled={currentDayIndex + 15 >= (resultData.dailyData?.length || 0)}>
-                  Seuraava
-                </Button>
-              </div>
-            )}
-            {timePeriod === 'week' && (
-              <div className="week-period-controls">
-                <Button onClick={handlePrevWeekPeriod} disabled={currentWeekIndex === 0}>
-                  Edellinen
-                </Button>
-                <Button onClick={handleNextWeekPeriod} disabled={currentWeekIndex + 15 >= (resultData.weeklyData?.length || 0)}>
-                  Seuraava
-                </Button>
-              </div>
-            )}
-            {timePeriod === 'month' && (
-              <div className="month-period-controls">
-                <Button
-                  onClick={() => setCurrentYear(currentYear - 1)}
-                  disabled={!getPrevYearAvailable()}
-                >
-                  Edellinen vuosi
-                </Button>
-                <Button
-                  onClick={() => setCurrentYear(currentYear + 1)}
-                  disabled={!getNextYearAvailable()}
-                >
-                  Seuraava vuosi
-                </Button>
-              </div>
-            )}
-          </div>
+            <div className="graph-options">
+    <Form.Check
+      type="checkbox"
+      label={t('showSpotPrice')}
+      checked={showSpotPrice}
+      onChange={() => setShowSpotPrice(!showSpotPrice)}
+      className="form-check"
+    />
+    <Form.Check
+      type="checkbox"
+      label={t('showFixedPrice')}
+      checked={showFixedPrice}
+      onChange={() => setShowFixedPrice(!showFixedPrice)}
+      className="form-check"
+    />
+    <Form.Check
+      type="checkbox"
+      label={t('showConsumption')}
+      checked={showConsumption}
+      onChange={() => setShowConsumption(!showConsumption)}
+      className="form-check"
+    />
+  </div>
+  <div className="chart-controls">
+  {timePeriod === 'day' && (
+    <div className="day-period-controls">
+      <Button onClick={handlePrevDayPeriod} disabled={currentDayIndex === 0}>
+        {t('previous')}
+      </Button>
+      <Button onClick={handleNextDayPeriod} disabled={currentDayIndex + 15 >= (resultData.dailyData?.length || 0)}>
+        {t('next')}
+      </Button>
+    </div>
+  )}
+  {timePeriod === 'week' && (
+    <div className="week-period-controls">
+      <Button onClick={handlePrevWeekPeriod} disabled={currentWeekIndex === 0}>
+        {t('previous')}
+      </Button>
+      <Button onClick={handleNextWeekPeriod} disabled={currentWeekIndex + 15 >= (resultData.weeklyData?.length || 0)}>
+        {t('next')}
+      </Button>
+    </div>
+  )}
+  {timePeriod === 'month' && (
+    <div className="month-period-controls">
+      <Button
+        onClick={() => setCurrentYear(currentYear - 1)}
+        disabled={!getPrevYearAvailable()}
+      >
+        {t('previousYear')}
+      </Button>
+      <Button
+        onClick={() => setCurrentYear(currentYear + 1)}
+        disabled={!getNextYearAvailable()}
+      >
+        {t('nextYear')}
+      </Button>
+    </div>
+  )}
+</div>
           
 
           <div className="chart-container">
@@ -360,7 +371,7 @@ const FilterForm: React.FC = () => {
                   x: {
                     title: {
                       display: true,
-                      text: timePeriod === 'month' ? 'Kuukausi' : 'Aika',
+                      text: timePeriod === 'month'  ? t('ChartMonth') : t('ChartTime'),
                     },
                     grid: {
                       display: false,
@@ -369,7 +380,7 @@ const FilterForm: React.FC = () => {
                   y: {
                     title: {
                       display: true,
-                      text: 'Hinta / Kulutus',
+                      text: t('Price/Consumption'),
                     },
                     grid: {
                       color: '#ddd',
@@ -380,25 +391,25 @@ const FilterForm: React.FC = () => {
             />
           </div>
           <div className="filter-options">
-          <Button
-            onClick={() => handleTimePeriodChange('month')}
-            className={timePeriod === 'month' ? 'btn selected' : 'btn'}
-          >
-            Kuukausi
-          </Button>
-          <Button
-            onClick={() => handleTimePeriodChange('week')}
-            className={timePeriod === 'week' ? 'btn selected' : 'btn'}
-          >
-            Viikko
-          </Button>
-          <Button
-            onClick={() => handleTimePeriodChange('day')}
-            className={timePeriod === 'day' ? 'btn selected' : 'btn'}
-          >
-            Päivä
-          </Button>
-        </div>
+  <Button
+    onClick={() => handleTimePeriodChange('month')}
+    className={timePeriod === 'month' ? 'btn selected' : 'btn'}
+  >
+    {t('month')}
+  </Button>
+  <Button
+    onClick={() => handleTimePeriodChange('week')}
+    className={timePeriod === 'week' ? 'btn selected' : 'btn'}
+  >
+    {t('week')}
+  </Button>
+  <Button
+    onClick={() => handleTimePeriodChange('day')}
+    className={timePeriod === 'day' ? 'btn selected' : 'btn'}
+  >
+    {t('day')}
+  </Button>
+</div>
         </>
       )}
     </Container>

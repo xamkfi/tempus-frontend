@@ -9,15 +9,24 @@ export const calculatePriceAndConsumption = async (formData: FormDataParams): Pr
         SquareMeters: formData.squareMeters.toString(),
         WorkShiftType: formData.workShiftType,
         HeatingType: formData.heatingType,
-        HasElectricCar: formData.hasElectricCar.toString(),
+        HasElectricCar: formData.hasElectricCar ? 'true' : 'false',
         NumberOfCars: formData.electricCarCount?.toString() || '',
-        HasSauna: formData.hasSauna.toString(),
+        HasSauna: formData.hasSauna ? 'true' : 'false',
         SaunaHeatingFrequency: formData.saunaHeatingFrequency?.toString() || '',
-        HasFireplace: formData.hasFirePlace.toString(),
+        HasFireplace: formData.hasFirePlace ? 'true' : 'false',
         FireplaceFrequency: formData.firePlaceHeatingFrequency?.toString() || '',
         NumberOfResidents: formData.numberOfResidents.toString(),
         ElectricCarkWhUsagePerYear: formData.electricCarKwhUsagePerYear?.toString() || '',
-        SolarPanel: formData.solarPanelCount.toString()
+        HasSolarPanel: formData.hasSolarPanels ? 'true' : 'false', 
+        SolarPanel: formData.solarPanelCount?.toString() || '', 
+        HasFloorHeating: formData.hasFloorHeating ? 'true' : 'false',
+        FloorSquareMeters: formData.floorHeatingSquareMeters?.toString() || ''
+    });
+
+    queryParams.forEach((value, key) => {
+        if (!value) {
+            queryParams.delete(key);
+        }
     });
 
     // Make the GET request

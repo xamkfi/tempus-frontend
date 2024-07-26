@@ -3,7 +3,10 @@ export interface FormDataParams {
   directiveFixedPrice: number;
   houseType: string;
   squareMeters: number;
+  numberOfResidents: number;
   workShiftType: string;
+  hasFloorHeating: boolean;
+  floorHeatingSquareMeters?: number;
   heatingType: string;
   hasElectricCar: boolean;
   electricCarCount?: number;
@@ -11,8 +14,8 @@ export interface FormDataParams {
   saunaHeatingFrequency?: number;
   hasFirePlace: boolean;
   firePlaceHeatingFrequency?: number;
-  numberOfResidents: number;
   electricCarKwhUsagePerYear?: number;
+  hasSolarPanels: boolean;
   solarPanelCount: number;
 }
 
@@ -23,6 +26,7 @@ export interface CalculationResult {
   CheaperOption: string;
   CostDifference: number;
   AverageHourlySpotPrice: number;
+  CalculationYears: number;
   MonthlyData: MonthlyData[];
 }
 

@@ -1,38 +1,111 @@
-.App {
+.header {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 2rem;
   align-items: center;
+}
+
+.info-box {
+  background-color: #f5ba3c;
+  color: black;
+  padding: 3rem 0;
+  width: 100%;
+  text-align: center;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  margin-top: 1.3rem;
+}
+
+.button-group {
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+.button-group .btn-service {
+  padding: 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  margin-right: 0.5rem;
+  position: static;
+}
+.button-group .btn-service:hover {
+  background-color: black;
+  color : white;
+}
+
+.info-text-container {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  margin-top: 1rem;
+}
+
+.info-text {
+  background-color: black;
+  color: white;
+  padding: 2rem;
+  border-radius: 30px;
+  margin: 2rem;
+  width: 30%;
+}
+
+.info-box b {
+  color: #f5ba3c;
+}
+
+.btn-service.active {
+  background-color: #f5ba3c !important;
+  color: black;
+}
+
+/* Apply margin-left only to elements with the class 'header-text-center' */
+.header-text-center {
+  margin-left: 73px;
+}
+
+#dropdown-basic-button {
+  background-color: black;
+  color: white; /* add this to make the text visible */
+}
+
+#dropdown-basic-button + .dropdown-menu .dropdown-item {
+  background-color: #f5ba3c;
+  color: black;
+  font-weight: bolder;
+}
+
+#dropdown-basic-button + .dropdown-menu .dropdown-item.selected {
+  background-color: black;
   color: white;
 }
-
-.App-link {
-  color: #61dafb;
+.footer {
+  background-color: black;
+  width: 100%;
+  padding: 1rem 0;
+  margin-top: 50px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.footer p {
+  color: white;
+  margin: 0;
+}
+
+.footer-links a {
+  color: white;
+  margin: 0 5px;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-logo {
+  height: 68px;
+  width: 173px;
+  /* Adjust the height as needed */
+}
+
+.footer-icon {
+  color: #f5ba3c;
+  margin-right: 5px;
 }

@@ -205,7 +205,7 @@ const ElectricityPriceForm: React.FC = () => {
             case 1:
                 return (
                     <>
-                        <h2 style={{ textAlign: 'center' }}>Starting Information</h2>
+                        <h2 style={{ textAlign: 'center', fontFamily: 'Montserrat, sans-serif'}}>Starting Information</h2>
                         <br />
                         <div className="form-group">
                             <label className="year-label">Year:</label>
@@ -219,8 +219,6 @@ const ElectricityPriceForm: React.FC = () => {
                                 </span>
                             </div>
                         </div>
-
-
                         <div className="form-group">
                             <label className="fixprice-label">Fixed Price:</label>
                             <div className="input-with-price">
@@ -294,7 +292,6 @@ const ElectricityPriceForm: React.FC = () => {
                     <>
                         <h2 style={{ textAlign: 'center' }}>Apartment Information</h2>
                         <br />
-                        <br />
                         <div className="form-group">
                             <label className="sqrt-label">Square Meters:</label>
                             <div className="input-with-sqrt">
@@ -317,8 +314,11 @@ const ElectricityPriceForm: React.FC = () => {
                                 </span>
                             )}
                         </div>
+                        <br />
                         <div className="form-group">
                             <label className="workshift-label">Work Shift Type:</label>
+                            <br />
+                            <br />
                             <div className="work-shift-buttons">
                                 <button
                                     className={`work-shift-button ${formData.workShiftType === 'DayWorker' ? 'selected' : ''}`}
@@ -768,9 +768,6 @@ const ElectricityPriceForm: React.FC = () => {
 
     return (
         <Container className="form-container">  
-                <h1 style={{ textAlign: 'center' }}>Sähkön Hintalaskuri</h1>
-                <br />
-                <br />
                 <Form onSubmit={handleSubmit}>
                     {renderStep()}
                 </Form>

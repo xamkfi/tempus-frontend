@@ -1,104 +1,105 @@
 import { FormDataParams } from '../models/FormDataParams';
-
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 export interface ValidationError {
     field: string;
     message: string;
 }
 
-export const validateFormData = (formData: FormDataParams, currentStep: number): ValidationError[] => {
+export const ValidateFormData = (formData: FormDataParams, currentStep: number, t: TFunction): ValidationError[] => {
     const errors: ValidationError[] = [];
-
+    
     if (currentStep === 1) {
         if (formData.year <= 0) {
-            errors.push({ field: 'year', message: 'Year must be greater than zero.' });
+            errors.push({ field: 'year', message: t('MinusYearError') });
         } else if (formData.year > new Date().getFullYear()) {
-            errors.push({ field: 'year', message: 'Year cannot be in the future.' });
+            errors.push({ field: 'year', message: t('FutureYearError') });
         }
         else if(formData.year <= 2014){
-            errors.push({ field: 'year', message: 'We dont have data before year 2015.' });
+            errors.push({ field: 'year', message: t('EarlyYearError') });
         }
         
         if (formData.directiveFixedPrice <= 0) {
-            errors.push({ field: 'directiveFixedPrice', message: 'Fixed Price must be greater than zero.' });
+            errors.push({ field: 'directiveFixedPrice', message: t('FixedPriceError') });
         }
     }
 
     if (currentStep === 2) {
         if(!formData.houseType){
             console.log(formData.houseType.toString())
-            errors.push({ field: 'houseType', message: 'You must select a house type.' });
+            errors.push({ field: 'houseType', message: t('HouseTypeError') });
         }
     }
     
     if (currentStep === 3) {
         if (formData.squareMeters <= 0) {
-            errors.push({ field: 'squareMeters', message: 'Square Meters must be greater than zero.' });
+            errors.push({ field: 'squareMeters', message: t('SquareMetersError') });
         }
         if (formData.numberOfResidents <= 0) {
-            errors.push({ field: 'numberOfResidents', message: 'You must select at least one resident.' });
+            errors.push({ field: 'numberOfResidents', message: t('NumberOfResidentsError') });
         }
     }
 
     if (currentStep === 3) {
         if(!formData.workShiftType){
             console.log(formData.workShiftType.toString())
-            errors.push({ field: 'workShiftType', message: 'You must select a workshift type.' });
+            errors.push({ field: 'workShiftType', message: t('WorkShiftTypeError') });
         }
     }
 
     if (formData.hasSauna && !formData.saunaHeatingFrequency) {
-        errors.push({ field: 'saunaHeatingFrequency', message: 'Sauna heating frequency is required when sauna is selected.' });
+        errors.push({ field: 'saunaHeatingFrequency', message: t('SaunaUsageError') });
     }
 
 
     if (formData.hasSauna) {
         if (!formData.saunaHeatingFrequency || formData.saunaHeatingFrequency <= 0) {
-            errors.push({ field: 'saunaHeatingFrequency', message: 'Sauna heating frequency is required and must be greater than zero when sauna is selected.' });
+            errors.push({ field: 'saunaHeatingFrequency', message: t('SaunaUsageError') });
         }
     }
 
     if (formData.hasFirePlace && !formData.firePlaceHeatingFrequency) {
-        errors.push({ field: 'firePlaceHeatingFrequency', message: 'Fireplace heating frequency is required when fireplace is selected.' });
+        errors.push({ field: 'firePlaceHeatingFrequency', message: t('FirePlaceUsageError') });
     }
 
     if (formData.hasFirePlace) {
         if (!formData.firePlaceHeatingFrequency || formData.firePlaceHeatingFrequency <= 0) {
-            errors.push({ field: 'firePlaceHeatingFrequency', message: 'Fireplace heating frequency is required and must be greater than zero when fireplace is selected.' });
+            errors.push({ field: 'firePlaceHeatingFrequency', message: t('FirePlaceUsageError') });
         }
     }
 
     if (formData.hasElectricCar) {
         if (!formData.electricCarCount || formData.electricCarCount <= 0) {
-            errors.push({ field: 'electricCarCount', message: 'Number of cars is required when electric car is selected and must be greater than zero.' });
+            errors.push({ field: 'electricCarCount', message: t('NumberOfElectricCarsError') });
         }
 
         if (!formData.electricCarKwhUsagePerYear || formData.electricCarKwhUsagePerYear <= 0) {
-            errors.push({ field: 'electricCarKwhUsagePerYear', message: 'Electric car kWh usage per year is required and must be greater than zero when electric car is selected.' });
+            errors.push({ field: 'electricCarKwhUsagePerYear', message: t('ElectriCarUsageError') });
         }
     }
 
     if (currentStep === 4) {
         if(!formData.heatingType){
             console.log(formData.heatingType.toString())
-            errors.push({ field: 'heatingType', message: 'You must select a heating type.' });
+            errors.push({ field: 'heatingType', message: t('HeatingTypeError') });
         }
     }
 
     if (currentStep === 5 && formData.hasFloorHeating) {
         if (formData.floorHeatingSquareMeters === undefined || formData.floorHeatingSquareMeters === null) {
-            errors.push({ field: 'floorHeatingSquareMeters', message: 'Floor Heating Squaremeters is required.' });
+            errors.push({ field: 'floorHeatingSquareMeters', message: t('FloorHeatingEmptyError') });
         } else if (formData.floorHeatingSquareMeters <= 0) {
-            errors.push({ field: 'floorHeatingSquareMeters', message: 'Floor Heating Squaremeters must be greater than zero.' });
+            errors.push({ field: 'floorHeatingSquareMeters', message: t('FloorHeatingError') });
         }
     }
 
     if ((formData.houseType === 'DetachedHouse' || formData.houseType === 'Cottage') && formData.hasSolarPanels) {
         if (!formData.solarPanelCount || formData.solarPanelCount <= 0) {
-            errors.push({ field: 'solarPanelCount', message: 'Solar panel count is required and must be greater than zero when solar panel is selected in a detached house or cottage.' });
+            errors.push({ field: 'solarPanelCount', message: t('SolarPanelCountError') });
         }
     }
 
     return errors;
 };
 
-export default validateFormData;
+export default ValidateFormData;

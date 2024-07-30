@@ -280,9 +280,9 @@ const FilterForm: React.FC = () => {
 </div>
 <div className="result-data-keywords">
   <p>{t('totalConsumption')}: <span className="dynamic-value">{resultData.totalConsumption?.toFixed(2) ?? 'N/A'}</span> kWh</p>
-  <p><b>{t('spotElectricityPrice')}: <span className="dynamic-value">{resultData.totalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</b></p>
-  <p><b>{t('fixedElectricityPrice')}: <span className="dynamic-value">{resultData.totalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</b></p>
-  <p><b>{t('time')}: <span className="dynamic-value">{resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</span></b></p>
+  <p>{t('spotElectricityPrice')}: <span className="dynamic-value">{resultData.totalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+  <p>{t('fixedElectricityPrice')}: <span className="dynamic-value">{resultData.totalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+  <p>{t('time')}: <span className="dynamic-value">{resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</span></p>
 </div>
     </div>
   </>

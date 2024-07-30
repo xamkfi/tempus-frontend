@@ -322,10 +322,6 @@ const ElectricityPriceForm: React.FC = () => {
                         <div className="form-group">
                               <label className="workshift-label">{t('WorkShiftType')}</label>
                             <br />
-                            <br />
-
-                            
-
                             <div className="work-shift-buttons">
                                 <button
                                     className={`work-shift-button ${formData.workShiftType === 'DayWorker' ? 'selected' : ''}`}
@@ -619,7 +615,7 @@ const ElectricityPriceForm: React.FC = () => {
                     if (formData.houseType === 'Detachedhouse' || formData.houseType === 'Cottage') {
                         return (
                             <>
-                                <h2 style={{ textAlign: 'center' }}>Solar Panels</h2>
+                                <h2 style={{ textAlign: 'center' }}>{t('SolarPanelHeader')}</h2>
                                 <br />
                                 <div className="form-group text-center">
                                     <label>{t('SolarPanels')}</label>

@@ -74,7 +74,7 @@ export const ValidateFormData = (formData: FormDataParams, currentStep: number, 
         }
 
         if (!formData.electricCarKwhUsagePerYear || formData.electricCarKwhUsagePerYear <= 0) {
-            errors.push({ field: 'electricCarKwhUsagePerYear', message: t('ElectriCarUsageError') });
+            errors.push({ field: 'electricCarKwhUsagePerYear', message: t('ElectricCarUsageError') });
         }
     }
 
@@ -93,7 +93,7 @@ export const ValidateFormData = (formData: FormDataParams, currentStep: number, 
         }
     }
 
-    if ((formData.houseType === 'DetachedHouse' || formData.houseType === 'Cottage') && formData.hasSolarPanels) {
+    if (formData.houseType === 'DetachedHouse' || formData.houseType === 'Cottage' && formData.hasSolarPanels === true) {
         if (!formData.solarPanelCount || formData.solarPanelCount <= 0) {
             errors.push({ field: 'solarPanelCount', message: t('SolarPanelCountError') });
         }

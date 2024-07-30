@@ -32,7 +32,7 @@ const initialFormData: FormDataParams = {
     firePlaceHeatingFrequency: 0,
     numberOfResidents: 1,
     hasSolarPanels: false,
-    solarPanelCount: 0
+    solarPanelCount: 1
 };
 
 type HouseType = 'Apartmenthouse' | 'Terracedhouse' | 'Detachedhouse' | 'Cottage';
@@ -54,6 +54,7 @@ const ElectricityPriceForm: React.FC = () => {
     const [showFixedPrice, setShowFixedPrice] = useState(true);
     const [showConsumption, setShowConsumption] = useState(false);
     const { t } = useTranslation();
+    const { i18n } = useTranslation();
     const skipFloorHeating = (heatingType: HeatingType): boolean => {
         return heatingType === 'ElectricHeating';
     };
@@ -591,8 +592,7 @@ const ElectricityPriceForm: React.FC = () => {
                             <div className="input-with-fireplace">
                                 <FireplaceRounded style={{ height: '45px', width: '45px' }}/>
                                 <input type="number" name="firePlaceHeatingFrequency" value={formData.firePlaceHeatingFrequency} onChange={handleChange} />
-                            </div>
-                            
+                            </div>   
                                 <span className="error-message">
                                     {validationErrors.find(error => error.field === 'firePlaceHeatingFrequency')?.message}
                                 </span>
@@ -651,11 +651,12 @@ const ElectricityPriceForm: React.FC = () => {
                                             <SolarPowerRounded style={{ height: '45px', width: '45px' }}/>
                                             <input type="number" name="solarPanelCount" value={formData.solarPanelCount} onChange={handleChange} />
                                         </div>
-                                        {showErrors && validationErrors.some(error => error.field === 'solarPanelCount') && (
+                                        <div>
                                             <span className="error-message">
                                                 {validationErrors.find(error => error.field === 'solarPanelCount')?.message}
                                             </span>
-                                        )}
+                                        </div>
+                                        
                                     </div>
                                 )}
                                 <div className="nextPrevButtons">
@@ -680,9 +681,17 @@ const ElectricityPriceForm: React.FC = () => {
             return <p>Ei kuukausidataa saatavilla.</p>;
         }
 
-        const labels = result.MonthlyData.map((month) => {
-            const monthName = new Date(2022, month.Month - 1).toLocaleString('fi-FI', { month: 'long' });
-            return monthName.charAt(0).toUpperCase() + monthName.slice(1);
+        const labels = result.MonthlyData.map((month, year) => {
+            let monthName;
+            if (i18n.language === 'en') {
+                 monthName = new Date(year, month.Month - 1).toLocaleString('en-US', { month: 'long' });
+                 return monthName.charAt(0).toUpperCase() + monthName.slice(1);
+            }
+            else if(i18n.language === 'fi') {
+                 monthName = new Date(year, month.Month - 1).toLocaleString('fi-FI', { month: 'long' });
+                 return monthName.charAt(0).toUpperCase() + monthName.slice(1);
+            }
+           
         });
         const consumptionData = result.MonthlyData.map((month) => month.Consumption);
         const spotPriceData = result.MonthlyData.map((month) => month.SpotPriceTotal);
@@ -692,17 +701,17 @@ const ElectricityPriceForm: React.FC = () => {
             labels: labels,
             datasets: [
                 ...(showSpotPrice ? [{
-                    label: 'Pörssi hinta',
+                    label: t('showSpotPrice'),
                     backgroundColor: '#4682B4',
                     data: spotPriceData,
                 }] : []),
                 ...(showFixedPrice ? [{
-                    label: 'Kiinteä hinta',
+                    label: t('showFixedPrice'),
                     backgroundColor: '#DC143C',
                     data: fixedPriceData,
                 }] : []),
                 ...(showConsumption ? [{
-                    label: 'Kulutus',
+                    label: t('showConsumption'),
                     backgroundColor: '#32CD32',
                     data: consumptionData,
                     datalabels: {
@@ -717,7 +726,7 @@ const ElectricityPriceForm: React.FC = () => {
 
         return (
             <div className="chart-container">
-                <h2 style={{ textAlign: 'center' }}>Kuukausi Data</h2>
+                <h2 style={{ textAlign: 'center' }}>{t('MonthlyResults')}</h2>
                 <Bar
                   data={chartData} 
                   options={{
@@ -786,37 +795,37 @@ const ElectricityPriceForm: React.FC = () => {
                     <>
                         <div className="result-data-container">
                             <div className="result-data-summary">
-                                <h3>Tulokset</h3>
-                                <p>Laskenta toteutettu aikavälillä: <b>{result.CalculationYears}</b></p>
-                                <p>Sinulle halvempi vaihtoehto olisi: <b>{result.CheaperOption}</b></p>
-                                <p className="price-difference">Hinta ero: {result.CostDifference}€</p>
+                                <h3>{t('results')}</h3>
+                                <p>{t('resultDescription')} <b>{result.CalculationYears}</b></p>
+                                <p>{t('cheaperOptionDescription')} <b>{result.CheaperOption}</b></p>
+                                <p className="price-difference">{t('priceDifference')} {result.CostDifference}€</p>
                             </div>
                             <div className="result-data-keywords">
-                                <p>Suuntaa antava kulutus: <span className="dynamic-value">{result.TotalDirectiveConsumption}</span> kWh</p>
-                                <p>Pörssi-sähköhinta: <span className="dynamic-value">{result.TotalSpotPriceCost}</span> €</p>
-                                <p>Kiinteä-sähköhinta: <span className="dynamic-value">{result.TotalFixedPriceCost}</span> €</p>
-                                <p>Pörssisähkön keskimääräinen tuntihinta: <span className="dynamic-value">{result.AverageHourlySpotPrice}</span> c/kWh</p>
+                                <p>{t('directiveConsumption')} <span className="dynamic-value">{result.TotalDirectiveConsumption}</span> kWh</p>
+                                <p>{t('spotElectriricityPrice')} <span className="dynamic-value">{result.TotalSpotPriceCost}</span> €</p>
+                                <p>{t('fixedElectricityPrice')} <span className="dynamic-value">{result.TotalFixedPriceCost}</span> €</p>
+                                <p>{t('estimatedAverageHourlySpotPrice')} <span className="dynamic-value">{result.AverageHourlySpotPrice}</span> c/kWh</p>
                                 
                             </div>
                         </div>
                         <div className="graph-options">
                             <Form.Check
                             type="checkbox"
-                            label="Näytä pörssihinta"
+                            label={t('showSpotPrice')}
                             checked={showSpotPrice}
                             onChange={() => setShowSpotPrice(!showSpotPrice)}
                             className="form-check"
                             />
                             <Form.Check
                             type="checkbox"
-                            label="Näytä kiinteä hinta"
+                            label={t('showFixedPrice')}
                             checked={showFixedPrice}
                             onChange={() => setShowFixedPrice(!showFixedPrice)}
                             className="form-check"
                             />
                             <Form.Check
                             type="checkbox"
-                            label="Näytä kulutus"
+                            label={t('showConsumption')}
                             checked={showConsumption}
                             onChange={() => setShowConsumption(!showConsumption)}
                             className="form-check"
@@ -825,7 +834,7 @@ const ElectricityPriceForm: React.FC = () => {
                         <br />
                         {renderChart()}
                         <div className="calculate-again">
-                            <Button className="calcAgain" variant="primary" onClick={handleReset}>Laske uudestaan</Button>
+                            <Button className="calcAgain" variant="primary" onClick={handleReset}>{t('calculateAgain')}</Button>
                         </div>
                     </>
                 )}

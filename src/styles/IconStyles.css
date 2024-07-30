@@ -60,15 +60,11 @@
     color: black;
 }
 
-
-
 .work-shift-buttons {
     display: flex;
     justify-content: center;
     gap: 40px;
     margin-top: 10px;
-    width: 150px;
-    margin-left: 35%;
 }
 
 .work-shift-button {
@@ -77,7 +73,8 @@
     border-radius: 50px; 
     cursor: pointer; 
     border: none;
-    width: 150px;
+    height: 100px;
+    width: 100px;
 }
 
 .work-shift-button:hover {
@@ -116,7 +113,8 @@
 }
 
 .workshift-label {
-    margin-left: 39%;
+    display: flex;
+    justify-content: center;
 }
 
 /* PHASE 5 APARTMENT HEATING TYPE*/

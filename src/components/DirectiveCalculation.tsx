@@ -5,13 +5,13 @@ import '../styles/DirectiveCalculation.css';
 import { FormDataParams, CalculationResult } from '../models/FormDataParams';
 import { calculatePriceAndConsumption } from '../services/FetchDirectiveData';
 import { Form, Button, Container, OverlayTrigger, Tooltip as BootstrapTooltip } from 'react-bootstrap';
-import { validateFormData, ValidationError } from '../validation/formDataValidation';
+import { ValidateFormData, ValidationError } from '../validation/formDataValidation';
 import { IoCalendarSharp } from "react-icons/io5";
 import { FaCentSign } from "react-icons/fa6";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ApartmentRounded, HolidayVillageRounded, HomeRounded, CabinRounded, GridViewRounded, People, ElectricBolt, Waves, FilterHdr, OilBarrel, ElectricCar, ChargingStation, FireplaceRounded, BathroomRounded, SolarPowerRounded, Help } from "@mui/icons-material";
 import  '../styles/IconStyles.css';
-
+import { useTranslation } from 'react-i18next';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, ChartJSTooltip, Legend, ChartDataLabels);
 
 const initialFormData: FormDataParams = {
@@ -40,6 +40,7 @@ type WorkShiftType = 'DayWorker' | 'ShiftWorker' | 'RemoteWorker';
 type HeatingType = 'ElectricHeating' | 'DistrictHeating' | 'GeothermalHeating' | 'OilHeating';
 
 const ElectricityPriceForm: React.FC = () => {
+    
     const [formData, setFormData] = useState<FormDataParams>(initialFormData);
     const [result, setResult] = useState<CalculationResult | null>(null);
     const [currentStep, setCurrentStep] = useState<number>(1);
@@ -52,7 +53,7 @@ const ElectricityPriceForm: React.FC = () => {
     const [showSpotPrice, setShowSpotPrice] = useState(true);
     const [showFixedPrice, setShowFixedPrice] = useState(true);
     const [showConsumption, setShowConsumption] = useState(false);
-
+    const { t } = useTranslation();
     const skipFloorHeating = (heatingType: HeatingType): boolean => {
         return heatingType === 'ElectricHeating';
     };
@@ -131,7 +132,7 @@ const ElectricityPriceForm: React.FC = () => {
             workShiftType: selectedWorkShiftType? selectedWorkShiftType.toString() : '' 
         });
     
-        const validationErrors = validateFormData(formData, currentStep);
+        const validationErrors = ValidateFormData(formData, currentStep, t);
         if (validationErrors.length > 0) {  
             setValidationErrors(validationErrors);
             setShowErrors(true);
@@ -158,7 +159,7 @@ const ElectricityPriceForm: React.FC = () => {
     };
 
     const handleNext = () => {
-        const validationErrors = validateFormData(formData, currentStep);
+        const validationErrors = ValidateFormData(formData, currentStep, t);
         if (validationErrors.length > 0) {
             setValidationErrors(validationErrors);
             setShowErrors(true);
@@ -205,10 +206,12 @@ const ElectricityPriceForm: React.FC = () => {
             case 1:
                 return (
                     <>
-                        <h2 style={{ textAlign: 'center', fontFamily: 'Montserrat, sans-serif'}}>Starting Information</h2>
+
+                        <h2 style={{ textAlign: 'center' }}>{t('startingInformation')}</h2>
+
                         <br />
                         <div className="form-group">
-                            <label className="year-label">Year:</label>
+                            <label className="year-label">{t('Year')}</label>
                             <div className="input-with-calendar">
                                 <IoCalendarSharp style={{ height: '45px', width: '45px' }}/>
                                 <input type="number" name="year" value={formData.year} onChange={handleChange} required min={2015} />
@@ -220,7 +223,7 @@ const ElectricityPriceForm: React.FC = () => {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="fixprice-label">Fixed Price:</label>
+                            <label className="fixprice-label">{t('fixedPrice')}</label>
                             <div className="input-with-price">
                                 <FaCentSign style={{ height: '45px', width: '45px' }}/>
                                 <input type="number" name="directiveFixedPrice" value={formData.directiveFixedPrice} onChange={handleChange} required min={1} step={0.1}/>
@@ -232,14 +235,14 @@ const ElectricityPriceForm: React.FC = () => {
                             </div>
                         </div>
                         <div className="nextPrevButtons">
-                            <Button className="nextButton" variant="primary" onClick={handleNext}>Next</Button>
+                            <Button className="nextButton" variant="primary" onClick={handleNext}>{t('NextButton')}</Button>
                         </div>
                     </>
                 );
             case 2:
                 return (
                     <>
-                        <h2 style={{ textAlign: 'center' }}>Apartment Type</h2>
+                        <h2 style={{ textAlign: 'center' }}>{t('houseType')}</h2>
                         <br />
                         <br />
                         <div className="form-group">
@@ -249,28 +252,28 @@ const ElectricityPriceForm: React.FC = () => {
                                     onClick={() => handleHouseTypeSelect('Apartmenthouse')}
                                 >
                                     <ApartmentRounded style={{ height: '60px', width: '60px' }}/>
-                                    <p className="houseIconNames">Apartment House</p>
+                                    <p className="houseIconNames">{t('ApartmentHouse')}</p>
                                 </button>
                                 <button
                                     className={`house-type-button ${selectedHouseType === 'Terracedhouse' ? 'selected' : ''}`}
                                     onClick={() => handleHouseTypeSelect('Terracedhouse')}
                                 >
                                     <HolidayVillageRounded style={{ height: '60px', width: '60px' }}/>
-                                    <p className="houseIconNames">Terraced House</p>
+                                    <p className="houseIconNames">{t('TerracedHouse')}</p>
                                 </button>
                                 <button
                                     className={`house-type-button ${selectedHouseType === 'Detachedhouse' ? 'selected' : ''}`}
                                     onClick={() => handleHouseTypeSelect('Detachedhouse')}
                                 >
                                     <HomeRounded style={{ height: '60px', width: '60px' }}/>
-                                    <p className="houseIconNames">Detached House</p>
+                                    <p className="houseIconNames">{t('DetachedHouse')}</p>
                                 </button>
                                 <button
                                     className={`house-type-button ${selectedHouseType === 'Cottage' ? 'selected' : ''}`}
                                     onClick={() => handleHouseTypeSelect('Cottage')}
                                 >
                                     <CabinRounded style={{ height: '60px', width: '60px' }}/>
-                                    <p className="houseIconNames">Cottage</p>
+                                    <p className="houseIconNames">{t('Cottage')}</p>
                                 </button >
                             </div>
                         </div>
@@ -282,18 +285,18 @@ const ElectricityPriceForm: React.FC = () => {
                                 </span>
                             </div>
                         <div className="nextPrevButtons">
-                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>Previous</Button>
-                            <Button className="nextButton" variant="primary" onClick={handleNext}>Next</Button>
+                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>{t('PreviousButton')}</Button>
+                            <Button className="nextButton" variant="primary" onClick={handleNext}>{t('NextButton')}</Button>
                         </div>
                     </>
                 )
             case 3:
                 return (
                     <>
-                        <h2 style={{ textAlign: 'center' }}>Apartment Information</h2>
+                        <h2 style={{ textAlign: 'center' }}>{t('ApartmentInformation')}</h2>
                         <br />
                         <div className="form-group">
-                            <label className="sqrt-label">Square Meters:</label>
+                            <label className="sqrt-label">{t('SquareMeters')}</label>
                             <div className="input-with-sqrt">
                                 <GridViewRounded style={{ height: '45px', width: '45px' }}/>
                                 <input type="number" name="squareMeters" value={formData.squareMeters} onChange={handleChange} required />
@@ -303,7 +306,7 @@ const ElectricityPriceForm: React.FC = () => {
                             </span>
                         </div>
                         <div className="form-group">
-                            <label className="resident-label">Number of Residents:</label>
+                            <label className="resident-label">{t('NumberOfResidents')}</label>
                             <div className="input-with-resident">
                                 <People style={{ height: '45px', width: '45px' }}/>
                                 <input type="number" name="numberOfResidents" value={formData.numberOfResidents} onChange={handleChange} required />
@@ -316,27 +319,30 @@ const ElectricityPriceForm: React.FC = () => {
                         </div>
                         <br />
                         <div className="form-group">
-                            <label className="workshift-label">Work Shift Type:</label>
+                              <label className="workshift-label">{t('WorkShiftType')}</label>
                             <br />
                             <br />
+
+                            
+
                             <div className="work-shift-buttons">
                                 <button
                                     className={`work-shift-button ${formData.workShiftType === 'DayWorker' ? 'selected' : ''}`}
                                     onClick={() => handleWorkshiftTypeSelect('DayWorker')}
                                 >
-                                    <p className="workShiftText">Day Worker</p>
+                                    <p className="workShiftText">{t('DayWorker')}</p>
                                 </button>
                                 <button
                                     className={`work-shift-button ${formData.workShiftType === 'ShiftWorker' ? 'selected' : ''}`}
                                     onClick={() => handleWorkshiftTypeSelect('ShiftWorker')}
                                 >
-                                    <p className="workShiftText">Shift Worker</p>
+                                    <p className="workShiftText">{t('ShiftWorker')}</p>
                                 </button>
                                 <button
                                     className={`work-shift-button ${formData.workShiftType === 'RemoteWorker' ? 'selected' : ''}`}
                                     onClick={() => handleWorkshiftTypeSelect('RemoteWorker')}
                                 >
-                                    <p className="workShiftText">Remote Worker</p>
+                                    <p className="workShiftText">{t('RemoteWorker')}</p>
                                 </button>
                             </div>
                             <br />
@@ -347,15 +353,15 @@ const ElectricityPriceForm: React.FC = () => {
                             </div>
                         </div>
                         <div className="nextPrevButtons">
-                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>Previous</Button>
-                            <Button className="nextButton" variant="primary" onClick={handleNext}>Next</Button>
+                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>{t('PreviousButton')}</Button>
+                            <Button className="nextButton" variant="primary" onClick={handleNext}>{t('NextButton')}</Button>
                         </div>
                     </>
                 );
             case 4:
                 return (
                     <>
-                        <h2 style={{ textAlign: 'center' }}>Apartment Heating Type</h2>
+                        <h2 style={{ textAlign: 'center' }}>{t('HeatingTypeInfo')}</h2>
                         <br />
                         <br />
                         <div className="form-group">
@@ -365,28 +371,28 @@ const ElectricityPriceForm: React.FC = () => {
                                     onClick={() => handleHeatingTypeSelect('ElectricHeating')}
                                 >
                                     <ElectricBolt style={{ height: '60px', width: '60px' }}/>
-                                    <p className="heatingTypeIcons">Electric Heating</p>
+                                    <p className="heatingTypeIcons">{t('ElectricHeating')}</p>
                                 </button>
                                 <button
                                     className={`house-type-button ${selectedHeatingType === 'DistrictHeating' ? 'selected' : ''}`}
                                     onClick={() => handleHeatingTypeSelect('DistrictHeating')}
                                 >
                                     <Waves style={{ height: '60px', width: '60px' }}/>
-                                    <p className="heatingTypeIcons">District Heating</p>
+                                    <p className="heatingTypeIcons">{t('DistrictHeating')}</p>
                                 </button>
                                 <button
                                     className={`house-type-button ${selectedHeatingType === 'GeothermalHeating' ? 'selected' : ''}`}
                                     onClick={() => handleHeatingTypeSelect('GeothermalHeating')}
                                 >
                                     <FilterHdr style={{ height: '60px', width: '60px' }}/>
-                                    <p className="heatingTypeIcons">Geothermal Heating</p>
+                                    <p className="heatingTypeIcons">{t('GeothermalHeating')}</p>
                                 </button>
                                 <button
                                     className={`house-type-button ${selectedHeatingType === 'OilHeating' ? 'selected' : ''}`}
                                     onClick={() => handleHeatingTypeSelect('OilHeating')}
                                 >
                                     <OilBarrel style={{ height: '60px', width: '60px' }}/>
-                                    <p className="heatingTypeIcons">Oil Heating</p>
+                                    <p className="heatingTypeIcons">{t('OilHeating')}</p>
                                 </button >
                             </div>
                         </div>
@@ -398,23 +404,23 @@ const ElectricityPriceForm: React.FC = () => {
                                 </span>
                             </div>
                         <div className="nextPrevButtons">
-                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>Previous</Button>
-                            <Button className="nextButton" variant="primary" onClick={handleNext}>Next</Button>
+                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>{t('PreviousButton')}</Button>
+                            <Button className="nextButton" variant="primary" onClick={handleNext}>{t('NextButton')}</Button>
                         </div>
                     </>
                 );
             case 5:
                 return (
                     <>
-                        <h2 style={{ textAlign: 'center' }}>Floor Heating</h2>
+                        <h2 style={{ textAlign: 'center' }}>{t('FloorHeating')}</h2>
                         <br />
                         <div className="form-group text-center">
-                            <label>Do you have electric floor heating in the bathroom?</label>
+                            <label>{t('HasFloorHeating')}</label>
                             <br />
                             <br />
                             <Form.Check
                                 inline
-                                label="Yes"
+                                label={t('Yes')}
                                 type="radio"
                                 id="floorHeatingYes"
                                 name="hasFloorHeating"
@@ -423,7 +429,7 @@ const ElectricityPriceForm: React.FC = () => {
                             />
                             <Form.Check
                                 inline
-                                label="No"
+                                label={t('NoI')}
                                 type="radio"
                                 id="floorHeatingNo"
                                 name="hasFloorHeating"
@@ -434,7 +440,7 @@ const ElectricityPriceForm: React.FC = () => {
                         {formData.hasFloorHeating && (
                             <>
                             <div className="form-group">
-                                <label className="sqrt-label">Square meters of heated area:</label>
+                                <label className="sqrt-label">{t('HeatedArea')}</label>
                                 <div className="input-with-sqrt">
                                     <GridViewRounded style={{ height: '45px', width: '45px' }}/>
                                     <input type="number" name="floorHeatingSquareMeters" value={formData.floorHeatingSquareMeters} onChange={handleChange} />
@@ -446,23 +452,23 @@ const ElectricityPriceForm: React.FC = () => {
                             </>
                         )}
                         <div className="nextPrevButtons">
-                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>Previous</Button>
-                            <Button className="nextButton" variant="primary" onClick={handleNext}>Next</Button>
+                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>{t('PreviousButton')}</Button>
+                            <Button className="nextButton" variant="primary" onClick={handleNext}>{t('NextButton')}</Button>
                         </div>
                     </>
                 );
             case 6:
                 return (
                     <>
-                        <h2 style={{ textAlign: 'center' }}>Electric Car</h2>
+                        <h2 style={{ textAlign: 'center' }}>{t('ElectricCar')}</h2>
                         <br />
                         <div className="form-group text-center">
-                            <label>Do you own a electric car?</label>
+                            <label>{t('ElectricCarInfo')}</label>
                             <br />
                             <br />
                             <Form.Check
                                 inline
-                                label="Yes"
+                                label={t('Yes')}
                                 type="radio"
                                 id="electricCarYes"
                                 name="hasElectricCar"
@@ -471,7 +477,7 @@ const ElectricityPriceForm: React.FC = () => {
                             />
                             <Form.Check
                                 inline
-                                label="No"
+                                label={t('No')}
                                 type="radio"
                                 id="electrciCarNo"
                                 name="hasElectricCar"
@@ -482,7 +488,7 @@ const ElectricityPriceForm: React.FC = () => {
                         {formData.hasElectricCar && (
                             <>
                                 <div className="form-group">
-                                    <label className="cars-label">Number of Electric Cars:</label>
+                                    <label className="cars-label">{t('NumberOfElectricCars')}</label>
                                     <div className="input-with-cars">
                                         <ElectricCar style={{ height: '45px', width: '45px' }}/>
                                         <input type="number" name="electricCarCount" value={formData.electricCarCount} onChange={handleChange} />
@@ -492,7 +498,7 @@ const ElectricityPriceForm: React.FC = () => {
                                         </span>
                                 </div>
                                 <div className="form-group">
-                                    <label className="kwh-label">Electric Car kWh Usage Per Year:</label>
+                                    <label className="kwh-label">{t('ElectricCarUsage')}</label>
                                     <div className="input-with-kwh">
                                         <ChargingStation style={{ height: '45px', width: '45px' }}/>
                                         <input type="number" name="electricCarKwhUsagePerYear" value={formData.electricCarKwhUsagePerYear} onChange={handleChange} />
@@ -509,23 +515,23 @@ const ElectricityPriceForm: React.FC = () => {
                             </>
                         )}
                         <div className="nextPrevButtons">
-                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>Previous</Button>
-                            <Button className="nextButton" variant="primary" onClick={handleNext}>Next</Button>
+                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>{t('PreviousButton')}</Button>
+                            <Button className="nextButton" variant="primary" onClick={handleNext}>{t('NextButton')}</Button>
                         </div>
                     </>
                 );
             case 7:
                 return (
                     <>
-                    <h2 style={{ textAlign: 'center' }}>Other Expenses</h2>
+                    <h2 style={{ textAlign: 'center' }}>{t('OtherExpenses')}</h2>
                     <br />
                     <div className="form-group text-center">
-                        <label>Do you have a electric heated sauna?</label>
+                        <label>{t('ElectricSauna')}</label>
                         <br />
                         <br />  
                         <Form.Check
                             inline
-                            label="Yes"
+                            label={t('Yes')}
                             type="radio"
                             id="saunaYes"
                             name="hasSauna"
@@ -534,7 +540,7 @@ const ElectricityPriceForm: React.FC = () => {
                         />
                         <Form.Check
                             inline
-                            label="No"
+                            label={t('NoI')}
                             type="radio"
                             id="saunaNo"
                             name="hasSauna"
@@ -544,7 +550,7 @@ const ElectricityPriceForm: React.FC = () => {
                     </div>
                     {formData.hasSauna && (
                         <div className="form-group">
-                        <label className="sauna-label">How many times sauna is heated per week?:</label>
+                        <label className="sauna-label">{t('ElectricSaunaUsage')}</label>
                         <div className="input-with-sauna">
                             <BathroomRounded style={{ height: '45px', width: '45px' }}/>
                             <input type="number" name="saunaHeatingFrequency" value={formData.saunaHeatingFrequency} onChange={handleChange} />
@@ -557,12 +563,12 @@ const ElectricityPriceForm: React.FC = () => {
                     {(formData.houseType === 'Detachedhouse' || formData.houseType === 'Cottage') && (
                         <>
                         <div className="form-group text-center">
-                            <label>Do you have a fireplace?</label>
+                            <label>{t('HasFirePlace')}</label>
                             <br />
                             <br />
                             <Form.Check
                             inline
-                            label="Yes"
+                            label={t('Yes')}
                             type="radio"
                             id="fireplaceYes"
                             name="hasFirePlace"
@@ -571,7 +577,7 @@ const ElectricityPriceForm: React.FC = () => {
                         />
                         <Form.Check
                             inline
-                            label="No"
+                            label={t('NoI')}
                             type="radio"
                             id="fireplaceNo"
                             name="hasFirePlace"
@@ -581,7 +587,7 @@ const ElectricityPriceForm: React.FC = () => {
                         </div>
                         {formData.hasFirePlace && (
                             <div className="form-group">
-                                <label className="fireplace-label">How many times fireplace is heated per week during heating season?</label>
+                                <label className="fireplace-label">{t('FirePlaceUsage')}</label>
                             <div className="input-with-fireplace">
                                 <FireplaceRounded style={{ height: '45px', width: '45px' }}/>
                                 <input type="number" name="firePlaceHeatingFrequency" value={formData.firePlaceHeatingFrequency} onChange={handleChange} />
@@ -596,14 +602,14 @@ const ElectricityPriceForm: React.FC = () => {
                     )}
                     {formData.houseType === 'Apartmenthouse' || formData.houseType === 'Terracedhouse'? (
                         <div className="nextPrevButtons">
-                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>Previous</Button>
-                            <Button variant="primary" onClick={handleSubmit}>Calculate Results</Button>
+                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>{t('PreviousButton')}</Button>
+                            <Button variant="primary" onClick={handleSubmit}>{t('CalculateResultsButton')}</Button>
                         </div>
                     ) : (
                         <>
                         <div className="nextPrevButtons">
-                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>Previous</Button>
-                            <Button className="nextButton" variant="primary" onClick={handleNext}>Next</Button>
+                            <Button className="prevButton" variant="secondary" onClick={handlePrevious}>{t('PreviousButton')}</Button>
+                            <Button className="nextButton" variant="primary" onClick={handleNext}>{t('NextButton')}</Button>
                         </div>
                         </>
                     )}
@@ -616,12 +622,12 @@ const ElectricityPriceForm: React.FC = () => {
                                 <h2 style={{ textAlign: 'center' }}>Solar Panels</h2>
                                 <br />
                                 <div className="form-group text-center">
-                                    <label>Do you own solar panels?</label>
+                                    <label>{t('SolarPanels')}</label>
                                     <br />
                                     <br />
                                     <Form.Check
                                         inline
-                                        label="Yes"
+                                        label={t('Yes')}
                                         type="radio"
                                         id="solapanelYes"
                                         name="hasSolarPanels"
@@ -630,7 +636,7 @@ const ElectricityPriceForm: React.FC = () => {
                                     />
                                     <Form.Check
                                         inline
-                                        label="No"
+                                        label={t('NoI')}
                                         type="radio"
                                         id="solarpanelNo"
                                         name="hasSolarPanels"
@@ -640,7 +646,7 @@ const ElectricityPriceForm: React.FC = () => {
                                 </div>
                                 {formData.hasSolarPanels && (
                                     <div className="form-group">
-                                        <label className="solarpanel-label">Number of Solar Panels:</label>
+                                        <label className="solarpanel-label">{t('SolarPanelCount')}</label>
                                         <div className="input-with-solarpanel">
                                             <SolarPowerRounded style={{ height: '45px', width: '45px' }}/>
                                             <input type="number" name="solarPanelCount" value={formData.solarPanelCount} onChange={handleChange} />
@@ -653,8 +659,8 @@ const ElectricityPriceForm: React.FC = () => {
                                     </div>
                                 )}
                                 <div className="nextPrevButtons">
-                                <Button className="prevButton" variant="secondary" onClick={handlePrevious}>Previous</Button>
-                                <Button variant="primary" onClick={handleSubmit}>Calculate Results</Button>
+                                <Button className="prevButton" variant="secondary" onClick={handlePrevious}>{t('PreviousButton')}</Button>
+                                <Button variant="primary" onClick={handleSubmit}>{t('CalculateResultsButton')}</Button>
                                 </div>
                             </>
                         );
@@ -768,6 +774,11 @@ const ElectricityPriceForm: React.FC = () => {
 
     return (
         <Container className="form-container">  
+
+                <h1 style={{ textAlign: 'center' }}>{t('MainHeader')}</h1>
+                <br />
+                <br />
+
                 <Form onSubmit={handleSubmit}>
                     {renderStep()}
                 </Form>

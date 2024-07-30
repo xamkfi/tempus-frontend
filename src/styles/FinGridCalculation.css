@@ -156,6 +156,7 @@
 }
 
 .result-data-keywords p .dynamic-value {
+  font-weight: bold;
   color: #f5ba3c; /* Color for the dynamic values */
 }
 

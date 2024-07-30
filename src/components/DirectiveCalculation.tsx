@@ -206,7 +206,9 @@ const ElectricityPriceForm: React.FC = () => {
             case 1:
                 return (
                     <>
+
                         <h2 style={{ textAlign: 'center' }}>{t('startingInformation')}</h2>
+
                         <br />
                         <div className="form-group">
                             <label className="year-label">{t('Year')}</label>
@@ -220,8 +222,6 @@ const ElectricityPriceForm: React.FC = () => {
                                 </span>
                             </div>
                         </div>
-
-
                         <div className="form-group">
                             <label className="fixprice-label">{t('fixedPrice')}</label>
                             <div className="input-with-price">
@@ -295,7 +295,6 @@ const ElectricityPriceForm: React.FC = () => {
                     <>
                         <h2 style={{ textAlign: 'center' }}>{t('ApartmentInformation')}</h2>
                         <br />
-                        <br />
                         <div className="form-group">
                             <label className="sqrt-label">{t('SquareMeters')}</label>
                             <div className="input-with-sqrt">
@@ -318,8 +317,14 @@ const ElectricityPriceForm: React.FC = () => {
                                 </span>
                             )}
                         </div>
+                        <br />
                         <div className="form-group">
-                            <label className="workshift-label">{t('WorkShiftType')}</label>
+                              <label className="workshift-label">{t('WorkShiftType')}</label>
+                            <br />
+                            <br />
+
+                            
+
                             <div className="work-shift-buttons">
                                 <button
                                     className={`work-shift-button ${formData.workShiftType === 'DayWorker' ? 'selected' : ''}`}
@@ -769,9 +774,11 @@ const ElectricityPriceForm: React.FC = () => {
 
     return (
         <Container className="form-container">  
+
                 <h1 style={{ textAlign: 'center' }}>{t('MainHeader')}</h1>
                 <br />
                 <br />
+
                 <Form onSubmit={handleSubmit}>
                     {renderStep()}
                 </Form>

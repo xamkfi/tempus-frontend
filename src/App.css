@@ -88,24 +88,59 @@
   color: white;
   margin: 0;
 }
-
+ 
 .footer-links a {
   color: white;
   margin: 0 5px;
   text-decoration: none;
 }
-
+ 
 .footer-links a:hover {
   text-decoration: underline;
 }
-
+ 
 .footer-logo {
   height: 68px;
   width: 173px;
   /* Adjust the height as needed */
 }
-
+ 
 .footer-icon {
   color: #f5ba3c;
   margin-right: 5px;
+  transition: color 0.3s ease;
+}
+ 
+.footer-icon-container {
+  display: inline-block;
+  position: relative;
+  margin-right: 10px;
+}
+ 
+.footer-icon-container:hover .footer-icon {
+  color: #ffffff;
+}
+ 
+.footer-icon-container:hover::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background-color: transparent;
+}
+
+.footer-links .footer-icon {
+  height: 32px;
+  width: 32px;
+}
+
+.footer-links a:not(:last-child)::after {
+  content: '|';
+  margin-left: 10px; 
+  margin-right: 10px; 
+  display: inline-block;
+  vertical-align: middle;
+  color: grey;
 }

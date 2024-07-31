@@ -8,7 +8,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import XIcon from '@mui/icons-material/X';
 import GitHubIcon from '@mui/icons-material/GitHub';
-
+ 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
   return (
@@ -21,20 +21,34 @@ const Footer: React.FC = () => {
               alt="Xamk Logo"
               className="footer-logo mb-2"
             />
-            
+           
             <p className="text-white mb-0">© 2024 Xamk</p>
           </Col>
         </Row>
         <Row className="justify-content-center mt-3">
           <Col md={6} className="text-center">
             <div className="footer-links">
-              <a href="https://www.xamk.fi" className="text-white"><LanguageIcon className="footer-icon" /></a> | 
-              <a href="https://www.instagram.com/xamkfi" className="text-white"><InstagramIcon className="footer-icon" /></a> | 
-              <a href="https://www.youtube.com/channel/UC0hDPOZXMUxd51l0CA9noJg" className="text-white"><YouTubeIcon className="footer-icon" /></a> | 
-              <a href="https://www.facebook.com/xamk" className="text-white"><FacebookIcon className="footer-icon" /></a> | 
-              <a href="https://www.linkedin.com/school/xamk" className="text-white"><LinkedInIcon className="footer-icon" /></a> | 
-              <a href="https://www.twitter.com/xamkfi" className="text-white"><XIcon className="footer-icon" /> </a> | 
-              <a href="https://www.github.com/xamk" className="text-white"><GitHubIcon className="footer-icon" /></a> 
+              <a href="https://www.xamk.fi" className="text-white">
+                <span className="footer-icon-container"><LanguageIcon className="footer-icon" /></span>
+              </a> 
+              <a href="https://www.instagram.com/xamkfi" className="text-white">
+                <span className="footer-icon-container"><InstagramIcon className="footer-icon" /></span>
+              </a> 
+              <a href="https://www.youtube.com/channel/UC0hDPOZXMUxd51l0CA9noJg" className="text-white">
+                <span className="footer-icon-container"><YouTubeIcon className="footer-icon" /></span>
+              </a> 
+              <a href="https://www.facebook.com/xamk" className="text-white">
+                <span className="footer-icon-container"><FacebookIcon className="footer-icon" /></span>
+              </a> 
+              <a href="https://www.linkedin.com/school/xamk" className="text-white">
+                <span className="footer-icon-container"><LinkedInIcon className="footer-icon" /></span>
+              </a> 
+              <a href="https://www.twitter.com/xamkfi" className="text-white">
+                <span className="footer-icon-container"><XIcon className="footer-icon" /></span>
+              </a> 
+              <a href="https://www.github.com/xamk" className="text-white">
+                <span className="footer-icon-container"><GitHubIcon className="footer-icon" /></span>
+              </a>
             </div>
           </Col>
         </Row>
@@ -47,5 +61,5 @@ const Footer: React.FC = () => {
     </footer>
   );
 };
-
+ 
 export default Footer;

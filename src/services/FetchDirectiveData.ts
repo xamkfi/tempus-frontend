@@ -30,7 +30,7 @@ export const calculatePriceAndConsumption = async (formData: FormDataParams): Pr
     });
 
     // Make the GET request
-    const response = await fetch(`https://localhost:7008/api/FrontEnd/CalculatePriceAndConsumption?${queryParams}`, {
+    const response = await fetch(`${process.env.REACT_APP_CALCULATION_SERVICE_URL}?${queryParams}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

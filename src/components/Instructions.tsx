@@ -20,9 +20,18 @@ const Instructions: React.FC = () => {
                 <div className="instructions">
                     <h2>{t('instructionsTitle')}</h2>
                     <div className="instruction-step">
-                        <p dangerouslySetInnerHTML={{ __html: t('step1') }} />
-                        <img src="./assets/FinGridLogIn.png" alt={t('step1ImgAlt')} />
-                    </div>
+  <p>
+    {t('step1BeforeLink')}{' '}
+    <a href="#" onClick={(event) => {
+      event.preventDefault();
+      window.open("https://oma.datahub.fi/#/login?returnUrl=%2F", "_blank");
+    }}>
+      {t('FingridcustomerportalLink')}
+    </a>
+    {t('step1AfterLink')}
+  </p>
+  <img src="./assets/FinGridLogIn.png" alt={t('step1ImgAlt')} />
+</div>
                     <div className="instruction-step">
                         <p>{t('step2')}</p>
                         <img src="./assets/selectAddressEdited.png" alt={t('step2ImgAlt')} />

@@ -88,12 +88,42 @@ select {
   justify-content: center
 }
 
-.calcAgain {
+.calculate-again .calcAgain {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  background-color: black;
+  color: white;
+  border: 2px solid black;
+  padding: 10px 20px; 
+  border-radius: 50px; 
+  cursor: pointer; 
   width: 50%;
 }
+
+.calculate-again .calcAgain:hover {
+  background-color: #f5ba3c;
+  color: black;
+  border: 2px solid black;
+}
+
+.nextPrevButtons .calcResultBtn {
+  background-color: black;
+  color: white;
+  border: 2px solid black;
+  padding: 10px 20px; 
+  border-radius: 50px; 
+  cursor: pointer; 
+  width: 175px;
+}
+
+.nextPrevButtons .calcResultBtn:hover {
+  background-color: #f5ba3c;
+  color: black;
+  border: 2px solid black;
+
+}
+
 
 /* Chart container */
 .chart-container {

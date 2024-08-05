@@ -657,7 +657,7 @@ const ElectricityPriceForm: React.FC = () => {
                                 )}
                                 <div className="nextPrevButtons">
                                 <Button className="prevButton" variant="secondary" onClick={handlePrevious}>{t('PreviousButton')}</Button>
-                                <Button variant="primary" onClick={handleSubmit}>{t('CalculateResultsButton')}</Button>
+                                <Button variant="primary" className="calcResultBtn" onClick={handleSubmit}>{t('CalculateResultsButton')}</Button>
                                 </div>
                             </>
                         );

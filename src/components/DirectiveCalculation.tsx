@@ -14,6 +14,7 @@ import  '../styles/IconStyles.css';
 import { useTranslation } from 'react-i18next';
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import 'react-circular-progressbar/dist/styles.css';
+import { use } from "i18next";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, ChartJSTooltip, Legend, ChartDataLabels);
 
@@ -57,6 +58,7 @@ const ElectricityPriceForm: React.FC = () => {
     const [showConsumption, setShowConsumption] = useState(false);
     const { t } = useTranslation();
     const { i18n } = useTranslation();
+    const [showProgressBar, setShowProgressBar] = useState(true);
 
     useEffect(() => {
         // Load saved state from localStorage if available
@@ -104,7 +106,6 @@ const ElectricityPriceForm: React.FC = () => {
         return (currentStep / totalSteps) * 100;
     };
     
-
 
     const renderTooltip = (props: any) => (
         <BootstrapTooltip id="button-tooltip" {...props}>
@@ -174,7 +175,7 @@ const ElectricityPriceForm: React.FC = () => {
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-       
+        
         setFormData({
            ...formData,
             workShiftType: selectedWorkShiftType? selectedWorkShiftType.toString() : '' 
@@ -190,7 +191,8 @@ const ElectricityPriceForm: React.FC = () => {
             try {
                 const data = await calculatePriceAndConsumption(formData);
                 setResult(data);
-                setShowErrors(false);  
+                setShowErrors(false);
+                setShowProgressBar(false);  
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -199,7 +201,8 @@ const ElectricityPriceForm: React.FC = () => {
             try {
                 const data = await calculatePriceAndConsumption(formData);
                 setResult(data);
-                setShowErrors(false);  
+                setShowErrors(false);
+                setShowProgressBar(false);  
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -243,6 +246,7 @@ const ElectricityPriceForm: React.FC = () => {
         setSelectedHouseType(null);
         setSelectedWorkshiftType(null);
         setSelectedHeatingType(null);
+        setShowProgressBar(true);
     };
 
     const progress = calculateProgressBar(currentStep, totalSteps);
@@ -814,6 +818,10 @@ const ElectricityPriceForm: React.FC = () => {
                             title: {
                                 display: true,
                                 text: 'Hinta (€ ) / Kulutus kWh',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold',
+                                }
                             },
                             grid: {
                                 color: '#ddd',
@@ -829,27 +837,29 @@ const ElectricityPriceForm: React.FC = () => {
     return (
         <Container className="form-container">  
 
-                <h1 style={{ textAlign: 'center' }}>{t('MainHeader')}</h1>
+                <h1 style={{ textAlign: 'center', fontFamily: 'Montserrat, sans-serif' }}>{t('MainHeader')}</h1>
                 <br />
                 <br />
 
                 <Form onSubmit={handleSubmit}>
                     {renderStep()}
-
+                    <br />
+                    {showProgressBar && (
                     <div className="progress-bar-container">
                         <CircularProgressbar
-                        value={progress}
-                        text={`${Math.round(progress)}%`}
-                        styles={buildStyles({
-                            pathColor: '#808080',
-                            textColor: 'black',
-                            trailColor: '#FFFFFF',
-                            textSize: '20px',
-                            pathTransitionDuration: 0.5,
-                        })}
-                        strokeWidth={15}
+                            value={calculateProgressBar(currentStep, totalSteps)}
+                            text={`${Math.round(calculateProgressBar(currentStep, totalSteps))}%`}
+                            styles={buildStyles({
+                                pathColor: '#808080',
+                                textColor: 'black',
+                                trailColor: '#FFFFFF',
+                                textSize: '20px',
+                                pathTransitionDuration: 0.5,
+                            })}
+                            strokeWidth={15}
                         />
                     </div>
+                )}
                 </Form>
                 {result && (
                     <>

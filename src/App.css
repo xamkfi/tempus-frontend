@@ -1,7 +1,21 @@
-.header {
-  text-align: center;
-  margin-bottom: 2rem;
-  align-items: center;
+.header-container {
+  background-color: black;
+  color: white; 
+  padding: 20px; 
+  border-radius: 20px; 
+  text-align: center; 
+  margin-top: 20px;
+  
+}
+.mainHeader {
+  	font-size: 3rem;
+}
+
+.header-container .h1 {
+  width: 300px;
+  height: auto;
+  max-width: 100%;
+  
 }
 
 .info-box {

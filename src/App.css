@@ -7,7 +7,7 @@
 .info-box {
   background-color: #f5ba3c;
   color: black;
-  padding: 3rem 0;
+  padding: 3rem 1rem; 
   width: 100%;
   text-align: center;
   font-size: 1.2rem;
@@ -35,6 +35,7 @@
 
 .info-text-container {
   display: flex;
+  flex-wrap: wrap; 
   justify-content: center;
   margin-top: 1rem;
 }
@@ -44,8 +45,15 @@
   color: white;
   padding: 2rem;
   border-radius: 30px;
-  margin: 2rem;
-  width: 30%;
+  margin: 1rem; 
+  width: calc(33% - 2rem); 
+  box-sizing: border-box; 
+}
+@media (max-width: 768px) {
+  .info-text {
+    width: calc(100% - 2rem); 
+    margin: 1rem 0; 
+  }
 }
 
 .info-box b {
@@ -57,14 +65,14 @@
   color: black;
 }
 
-/* Apply margin-left only to elements with the class 'header-text-center' */
+
 .header-text-center {
   margin-left: 73px;
 }
 
 #dropdown-basic-button {
   background-color: black;
-  color: white; /* add this to make the text visible */
+  color: white; 
 }
 
 #dropdown-basic-button + .dropdown-menu .dropdown-item {
@@ -102,7 +110,7 @@
 .footer-logo {
   height: 68px;
   width: 173px;
-  /* Adjust the height as needed */
+  
 }
  
 .footer-icon {

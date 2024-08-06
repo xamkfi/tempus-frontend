@@ -25,6 +25,7 @@ const FilterForm: React.FC = () => {
   const [showFixedPrice, setShowFixedPrice] = useState(true);
   const [showConsumption, setShowConsumption] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
   
   useEffect(() => {
     // Load saved state from localStorage if available
@@ -42,6 +43,7 @@ const FilterForm: React.FC = () => {
       setShowSpotPrice(state.showSpotPrice);
       setShowFixedPrice(state.showFixedPrice);
       setShowConsumption(state.showConsumption);
+      setCurrentMonthIndex(state.currentMonthIndex);
     }
   }, []);
 
@@ -59,6 +61,7 @@ const FilterForm: React.FC = () => {
       showSpotPrice,
       showFixedPrice,
       showConsumption,
+      currentMonthIndex,
     }));
   }, [fixedPrice, csvFile, resultData, error, timePeriod, currentDayIndex, currentWeekIndex, currentYear, showSpotPrice, showFixedPrice, showConsumption]);
 
@@ -85,6 +88,7 @@ const FilterForm: React.FC = () => {
         setError(null);
         setCurrentDayIndex(0);
         setCurrentWeekIndex(0);
+        setCurrentMonthIndex(0);
   
         if (data.monthlyData) {
           const sortedMonthlyData = data.monthlyData.sort((a, b) => a.year - b.year);
@@ -113,6 +117,7 @@ const FilterForm: React.FC = () => {
     setTimePeriod(period);
     setCurrentDayIndex(0);
     setCurrentWeekIndex(0);
+    setCurrentMonthIndex(0);
     const firstyear = new Date().getFullYear() - 1;
     setCurrentYear(firstyear);
     
@@ -146,7 +151,7 @@ const FilterForm: React.FC = () => {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-
+  const isMobile = () => window.innerWidth <= 768;
   const getGraphData = () => {
     if (!resultData) return { labels: [], datasets: [] };
 
@@ -155,94 +160,144 @@ const FilterForm: React.FC = () => {
     let fixedPrices: number[] = [];
     let consumptions: number[] = [];
 
-    if (timePeriod === 'day' && resultData.dailyData) {
-      const days = resultData.dailyData.slice(currentDayIndex, currentDayIndex + 15);
-      labels = days.map(data => `${formatDate(data.day)}`);
-      spotPrices = days.map(data => data.spotPrice);
-      fixedPrices = days.map(data => data.fixedPrice);
-      consumptions = days.map(data => data.consumption);
-    } else if (timePeriod === 'week' && resultData.weeklyData) {
-      const weeks = resultData.weeklyData.slice(currentWeekIndex, currentWeekIndex + 15);
-      labels = weeks.map(data => `Vk ${data.week}, ${data.year}`);
-      spotPrices = weeks.map(data => data.spotPrice);
-      fixedPrices = weeks.map(data => data.fixedPrice);
-      consumptions = weeks.map(data => data.consumption);
-    } else if (timePeriod === 'month' && resultData.monthlyData) {
-      const months = resultData.monthlyData
-        .sort((a, b) => a.year - b.year) // Sort by year
-        .filter(data => data.year === currentYear);
-        
-      labels = months.map(data => `${data.month}/${data.year}`);
-      spotPrices = months.map(data => data.spotPrice);
-      fixedPrices = months.map(data => data.fixedPrice);
-      consumptions = months.map(data => data.consumption);
-    }
+    const maxItems = isMobile() ? 6 : 15; // Limit to 6 for mobile, 15 otherwise
 
-    const datasets: any[] = [];
-    if (showSpotPrice) {
+    if (timePeriod === 'day' && resultData.dailyData) {
+      const days = resultData.dailyData.slice(currentDayIndex, currentDayIndex + maxItems);
+      labels = days.map(data => `${formatDate(data.day)}`);
+      spotPrices = days.map(data => parseFloat(data.spotPrice.toFixed(2))); // Round to 2 decimal places
+      fixedPrices = days.map(data => parseFloat(data.fixedPrice.toFixed(2)));
+      consumptions = days.map(data => data.consumption);
+  } else if (timePeriod === 'week' && resultData.weeklyData) {
+      const weeks = resultData.weeklyData.slice(currentWeekIndex, currentWeekIndex + maxItems);
+      labels = weeks.map(data => `Vk ${data.week}, ${data.year}`);
+      spotPrices = weeks.map(data => parseFloat(data.spotPrice.toFixed(2))); // Round to 2 decimal places
+      fixedPrices = weeks.map(data => parseFloat(data.fixedPrice.toFixed(2)));
+      consumptions = weeks.map(data => data.consumption);
+  } else if (timePeriod === 'month' && resultData.monthlyData) {
+      let months = resultData.monthlyData
+          .filter(data => isMobile() ? true : data.year === currentYear) // Handle year filter only if not mobile
+          .sort((a, b) => a.year - b.year); // Sort by year
+  
+      if (isMobile()) {
+          months = months.slice(currentMonthIndex, currentMonthIndex + maxItems);
+      } else {
+          months = months.slice(0, maxItems);
+      }
+  
+      labels = months.map(data => `${data.month}/${data.year}`);
+      spotPrices = months.map(data => parseFloat(data.spotPrice.toFixed(2))); // Round to 2 decimal places
+      fixedPrices = months.map(data => parseFloat(data.fixedPrice.toFixed(2)));
+      consumptions = months.map(data => data.consumption);
+  }
+  
+  const datasets: any[] = [];
+  if (showSpotPrice) {
       datasets.push({
-        label: t('ChartSpotPrice'),
-        backgroundColor: '#4682B4',
-        data: spotPrices,
+          label: t('ChartSpotPrice'),
+          backgroundColor: '#4682B4',
+          data: spotPrices
       });
-    }
+  }
     if (showFixedPrice) {
-      datasets.push({
-        label: t('fixedPrice'),
-        backgroundColor: '#DC143C',
-        data: fixedPrices
-      });
+        datasets.push({
+            label: t('fixedPrice'),
+            backgroundColor: '#DC143C',
+            data: fixedPrices
+        });
     }
     if (showConsumption) {
-      datasets.push({
-        label: t('consumption'),
-        backgroundColor: '#32CD32',
-        data: consumptions,
-        datalabels: {
-          display: true,
-          color: '#333',
-          formatter: (value: number) => `${value.toFixed(2)} kWh`,
-        },
-      });
+        datasets.push({
+            label: t('consumption'),
+            backgroundColor: '#32CD32',
+            data: consumptions,
+            datalabels: {
+                display: false,
+                color: '#333',
+                
+            },
+        });
     }
 
     return {
-      labels,
-      datasets,
+        labels,
+        datasets,
     };
-  };
+};
 
-  const handleNextDayPeriod = () => {
-    if (resultData?.dailyData && currentDayIndex + 15 < resultData.dailyData.length) {
-      setCurrentDayIndex(currentDayIndex + 15);
-    }
-  };
 
-  const handlePrevDayPeriod = () => {
-    if (resultData?.dailyData && currentDayIndex - 15 >= 0) {
-      setCurrentDayIndex(currentDayIndex - 15);
-    }
-  };
+const handleNextDayPeriod = () => {
+  const step = isMobile() ? 6 : 15;
+  if (resultData?.dailyData && currentDayIndex + step < resultData.dailyData.length) {
+      setCurrentDayIndex(currentDayIndex + step);
+  }
+};
 
-  const handleNextWeekPeriod = () => {
-    if (resultData?.weeklyData && currentWeekIndex + 15 < resultData.weeklyData.length) {
-      setCurrentWeekIndex(currentWeekIndex + 15);
-    }
-  };
+const handlePrevDayPeriod = () => {
+  const step = isMobile() ? 6 : 15;
+  if (resultData?.dailyData && currentDayIndex - step >= 0) {
+      setCurrentDayIndex(currentDayIndex - step);
+  }
+};
 
-  const handlePrevWeekPeriod = () => {
-    if (resultData?.weeklyData && currentWeekIndex - 15 >= 0) {
-      setCurrentWeekIndex(currentWeekIndex - 15);
-    }
-  };
+const handleNextWeekPeriod = () => {
+  const step = isMobile() ? 6 : 15;
+  if (resultData?.weeklyData && currentWeekIndex + step < resultData.weeklyData.length) {
+      setCurrentWeekIndex(currentWeekIndex + step);
+  }
+};
 
-  const getNextYearAvailable = () => {
-    return resultData?.monthlyData?.some(data => data.year === currentYear + 1) ?? false;
-  };
+const handlePrevWeekPeriod = () => {
+  const step = isMobile() ? 6 : 15;
+  if (resultData?.weeklyData && currentWeekIndex - step >= 0) {
+      setCurrentWeekIndex(currentWeekIndex - step);
+  }
+};
 
-  const getPrevYearAvailable = () => {
-    return resultData?.monthlyData?.some(data => data.year === currentYear - 1) ?? false;
+const getNextYearAvailable = () => {
+  if (isMobile()) {
+      return false; // No year transition needed for mobile monthly view
+  }
+  return resultData?.monthlyData?.some(data => data.year === currentYear + 1) ?? false;
+};
+
+const getPrevYearAvailable = () => {
+  if (isMobile()) {
+      return false; // No year transition needed for mobile monthly view
+  }
+  return resultData?.monthlyData?.some(data => data.year === currentYear - 1) ?? false;
+};
+
+    const handleNextMonthPeriod = () => {
+      const step = isMobile() ? 6 : 15;
+      if (isMobile()) {
+          // Handle mobile month navigation
+          if (resultData?.monthlyData && currentMonthIndex + step < resultData.monthlyData.length) {
+              setCurrentMonthIndex(currentMonthIndex + step);
+          }
+      } else {
+          // Handle regular month navigation
+          if (resultData?.monthlyData && currentMonthIndex + step < resultData.monthlyData.length) {
+              setCurrentMonthIndex(currentMonthIndex + step);
+          }
+      }
   };
+  
+  const handlePrevMonthPeriod = () => {
+      const step = isMobile() ? 6 : 15;
+      if (isMobile()) {
+          // Handle mobile month navigation
+          if (resultData?.monthlyData && currentMonthIndex - step >= 0) {
+              setCurrentMonthIndex(currentMonthIndex - step);
+          }
+      } else {
+          // Handle regular month navigation
+          if (resultData?.monthlyData && currentMonthIndex - step >= 0) {
+              setCurrentMonthIndex(currentMonthIndex - step);
+          }
+      }
+  };
+  
 
   return (
     <Container className="filter-form-container">
@@ -372,20 +427,41 @@ const FilterForm: React.FC = () => {
   )}
   {timePeriod === 'month' && (
     <div className="month-period-controls">
-      <Button
-        onClick={() => setCurrentYear(currentYear - 1)}
-        disabled={!getPrevYearAvailable()}
-      >
-        {t('previousYear')}
-      </Button>
-      <Button
-        onClick={() => setCurrentYear(currentYear + 1)}
-        disabled={!getNextYearAvailable()}
-      >
-        {t('nextYear')}
-      </Button>
+      {isMobile() && (
+        <>
+          <Button
+            onClick={handlePrevMonthPeriod}
+            disabled={currentMonthIndex === 0}
+        >
+            {t('previous')}
+        </Button>
+        <Button
+            onClick={handleNextMonthPeriod}
+            disabled={currentMonthIndex + (isMobile() ? 6 : 15) >= (resultData?.monthlyData?.length || 0)}
+        >
+            {t('next')}
+        </Button>
+        </>
+      )}
+        
+        {!isMobile() && (
+                <>
+                    <Button 
+                        onClick={() => setCurrentYear(currentYear - 1)}
+                        disabled={!getPrevYearAvailable()}
+                    >
+                        {t('previousYear')}
+                    </Button>
+                    <Button
+                        onClick={() => setCurrentYear(currentYear + 1)}
+                        disabled={!getNextYearAvailable()}
+                    >
+                        {t('nextYear')}
+                    </Button>
+                </>
+            )}
     </div>
-  )}
+)}
 </div>
           
 
@@ -397,9 +473,27 @@ const FilterForm: React.FC = () => {
                   legend: {
                     position: 'top' as const,
                   },
+                  tooltip: {
+                    callbacks: {
+                          label: function(context) {
+                              let label = context.dataset.label || '';
+                              if (label) {
+                                  label += ': ';
+                              }
+                              if (context.dataset.label === 'Kulutus') {
+                                  label += context.raw + ' kWh';
+                              } else {
+                                  label += context.raw + ' €';
+                              }
+                              return label;
+                          }
+                      }
+                  },
                   datalabels: {
                     display: false,
                   },
+                  
+                  
                 },
                 responsive: true,
                 maintainAspectRatio: false,
@@ -412,15 +506,22 @@ const FilterForm: React.FC = () => {
                     grid: {
                       display: false,
                     },
+                    
                   },
                   y: {
                     title: {
                       display: true,
                       text: t('Price/Consumption'),
+                      font: {
+                        size: 14,
+                        weight: 'bold',
+                    }
+                      
                     },
                     grid: {
                       color: '#ddd',
                     },
+                    
                   },
                 },
               }}

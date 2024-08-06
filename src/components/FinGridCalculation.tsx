@@ -26,6 +26,42 @@ const FilterForm: React.FC = () => {
   const [showConsumption, setShowConsumption] = useState(false);
   const [loading, setLoading] = useState(false);
   
+  useEffect(() => {
+    // Load saved state from localStorage if available
+    const savedState = localStorage.getItem('filterFormState');
+    if (savedState) {
+      const state = JSON.parse(savedState);
+      setFixedPrice(state.fixedPrice);
+      setCsvFile(state.csvFile ? new File([state.csvFile], state.csvFile.name) : null);
+      setResultData(state.resultData);
+      setError(state.error);
+      setTimePeriod(state.timePeriod);
+      setCurrentDayIndex(state.currentDayIndex);
+      setCurrentWeekIndex(state.currentWeekIndex);
+      setCurrentYear(state.currentYear);
+      setShowSpotPrice(state.showSpotPrice);
+      setShowFixedPrice(state.showFixedPrice);
+      setShowConsumption(state.showConsumption);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save state to localStorage whenever it changes
+    localStorage.setItem('filterFormState', JSON.stringify({
+      fixedPrice,
+      csvFile,
+      resultData,
+      error,
+      timePeriod,
+      currentDayIndex,
+      currentWeekIndex,
+      currentYear,
+      showSpotPrice,
+      showFixedPrice,
+      showConsumption,
+    }));
+  }, [fixedPrice, csvFile, resultData, error, timePeriod, currentDayIndex, currentWeekIndex, currentYear, showSpotPrice, showFixedPrice, showConsumption]);
+
   
 
   const handleSubmit = async (e: React.FormEvent) => {

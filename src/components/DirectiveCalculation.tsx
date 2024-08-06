@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip as ChartJSTooltip, Legend } from 'chart.js';
 import '../styles/DirectiveCalculation.css';
@@ -55,6 +55,43 @@ const ElectricityPriceForm: React.FC = () => {
     const [showConsumption, setShowConsumption] = useState(false);
     const { t } = useTranslation();
     const { i18n } = useTranslation();
+
+    useEffect(() => {
+        // Load saved state from localStorage if available
+        const savedState = localStorage.getItem('electricityPriceFormState');
+        if (savedState) {
+            const state = JSON.parse(savedState);
+            setFormData(state.formData);
+            setResult(state.result);
+            setCurrentStep(state.currentStep);
+            setValidationErrors(state.validationErrors);
+            setShowErrors(state.showErrors);
+            setSelectedHouseType(state.selectedHouseType);
+            setSelectedWorkshiftType(state.selectedWorkshiftType);
+            setSelectedHeatingType(state.selectedHeatingType);
+            setShowSpotPrice(state.showSpotPrice);
+            setShowFixedPrice(state.showFixedPrice);
+            setShowConsumption(state.showConsumption);
+        }
+    }, []);
+    useEffect(() => {
+        // Save state to localStorage
+        
+        localStorage.setItem('electricityPriceFormState', JSON.stringify({
+            formData,
+            result,
+            currentStep,
+            validationErrors,
+            showErrors,
+            selectedHouseType,
+            selectedWorkShiftType,
+            selectedHeatingType,
+            showSpotPrice,
+            showFixedPrice,
+            showConsumption
+        }));
+    }, [formData, result, currentStep, validationErrors, showErrors, selectedHouseType, selectedWorkShiftType, selectedHeatingType, showSpotPrice, showFixedPrice, showConsumption]);
+        
     const skipFloorHeating = (heatingType: HeatingType): boolean => {
         return heatingType === 'ElectricHeating';
     };

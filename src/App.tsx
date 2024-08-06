@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import FinGridCalculation from './components/FinGridCalculation';
 import DirectiveCalculation from './components/DirectiveCalculation';
@@ -13,6 +13,20 @@ import Footer from './components/Footer'; // Import the Footer component
 const App: React.FC = () => {
   const [activeService, setActiveService] = useState<string>('fingrid');
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.removeItem('electricityPriceFormState');
+      localStorage.removeItem('filterFormState');
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const renderService = () => {
     switch (activeService) {

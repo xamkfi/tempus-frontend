@@ -12,6 +12,9 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ApartmentRounded, HolidayVillageRounded, HomeRounded, CabinRounded, GridViewRounded, People, ElectricBolt, Waves, FilterHdr, OilBarrel, ElectricCar, ChargingStation, FireplaceRounded, BathroomRounded, SolarPowerRounded, Help } from "@mui/icons-material";
 import  '../styles/IconStyles.css';
 import { useTranslation } from 'react-i18next';
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import 'react-circular-progressbar/dist/styles.css';
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, ChartJSTooltip, Legend, ChartDataLabels);
 
 const initialFormData: FormDataParams = {
@@ -49,15 +52,22 @@ const ElectricityPriceForm: React.FC = () => {
     const [selectedHouseType, setSelectedHouseType] = useState<HouseType | null>(null);
     const [selectedWorkShiftType, setSelectedWorkshiftType] = useState<WorkShiftType | null>(null);
     const [selectedHeatingType, setSelectedHeatingType] = useState<HeatingType | null>(null);
-
     const [showSpotPrice, setShowSpotPrice] = useState(true);
     const [showFixedPrice, setShowFixedPrice] = useState(true);
     const [showConsumption, setShowConsumption] = useState(false);
     const { t } = useTranslation();
     const { i18n } = useTranslation();
+
     const skipFloorHeating = (heatingType: HeatingType): boolean => {
         return heatingType === 'ElectricHeating';
     };
+
+    const totalSteps = 8;
+    const calculateProgressBar = (currentStep: number, totalSteps: number): number => {
+        return (currentStep / totalSteps) * 100;
+    };
+    
+
 
     const renderTooltip = (props: any) => (
         <BootstrapTooltip id="button-tooltip" {...props}>
@@ -84,14 +94,14 @@ const ElectricityPriceForm: React.FC = () => {
 
     const handleHouseTypeSelect = (houseType: HouseType) => {
         if (houseType === 'Apartmenthouse' || houseType === 'Terracedhouse' || houseType === 'Detachedhouse' || houseType === 'Cottage') {
-            const newHouseType = selectedHouseType === houseType ? null : houseType; // Toggle selection
+            const newHouseType = selectedHouseType === houseType ? null : houseType; 
     
             setSelectedHouseType(newHouseType);
             setShowErrors(false);
             
             setFormData({
                 ...formData,
-                houseType: newHouseType ? houseType.toString() : ''  // Set to '' if no type is selected
+                houseType: newHouseType ? houseType.toString() : ''  
             });
         }
     };
@@ -197,6 +207,8 @@ const ElectricityPriceForm: React.FC = () => {
         setSelectedWorkshiftType(null);
         setSelectedHeatingType(null);
     };
+
+    const progress = calculateProgressBar(currentStep, totalSteps);
 
     const renderStep = (): React.ReactNode => {
         if (result !== null) {
@@ -786,6 +798,21 @@ const ElectricityPriceForm: React.FC = () => {
 
                 <Form onSubmit={handleSubmit}>
                     {renderStep()}
+
+                    <div className="progress-bar-container">
+                        <CircularProgressbar
+                        value={progress}
+                        text={`${Math.round(progress)}%`}
+                        styles={buildStyles({
+                            pathColor: '#808080',
+                            textColor: 'black',
+                            trailColor: '#FFFFFF',
+                            textSize: '20px',
+                            pathTransitionDuration: 0.5,
+                        })}
+                        strokeWidth={15}
+                        />
+                    </div>
                 </Form>
                 {result && (
                     <>

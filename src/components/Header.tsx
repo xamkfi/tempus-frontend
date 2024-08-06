@@ -15,9 +15,12 @@ const Header: React.FC = () => {
     <>
       <Row className="justify-content-center">
         <Col xs="auto">
-          <h1>{t('title')}</h1>
+          <div className = "header-container">
+            <h1 className='mainHeader'>{t('title')}</h1>
+          </div>
         </Col>
       </Row>
+      <br />
       <Row className="justify-content-center align-items-center">
         <Col xs="auto" className="header-text-center text-center">
           <img src='./assets/image.png' height={68} width={173} alt="Xamk Logo" />

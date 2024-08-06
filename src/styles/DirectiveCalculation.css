@@ -262,3 +262,14 @@ select {
   width: 80px;
   height: 80px;
 }
+
+@media (max-width: 600px) {
+  .progress-bar-container {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+  }
+}

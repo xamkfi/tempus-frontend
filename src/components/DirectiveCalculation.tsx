@@ -107,6 +107,10 @@ const ElectricityPriceForm: React.FC = () => {
         return heatingType === 'ElectricHeating';
     };
 
+    const skipHeatingType = (housetype: HouseType): boolean => {
+        return housetype === 'Apartmenthouse';
+    };
+
     const totalSteps = 8;
     const calculateProgressBar = (currentStep: number, totalSteps: number): number => {
         return (currentStep / totalSteps) * 100;
@@ -230,6 +234,8 @@ const ElectricityPriceForm: React.FC = () => {
 
         if (currentStep === 4 && skipFloorHeating(formData.heatingType as HeatingType)) {
             setCurrentStep(currentStep + 2);
+        } else if (currentStep === 3 && skipHeatingType(formData.houseType as HouseType)){
+            setCurrentStep(currentStep + 2);
         } else {
             setCurrentStep(currentStep + 1);
         }
@@ -239,6 +245,8 @@ const ElectricityPriceForm: React.FC = () => {
         let prevStep = currentStep - 1;
 
         if (currentStep === 6 && skipFloorHeating(formData.heatingType as HeatingType)) {
+            prevStep = currentStep - 2;
+        } else if (currentStep === 5 && skipHeatingType(formData.houseType as HouseType)) {
             prevStep = currentStep - 2;
         }
 
@@ -722,7 +730,7 @@ const ElectricityPriceForm: React.FC = () => {
                             </>
                         );
                     } else {
-                        setCurrentStep(currentStep + 1); // Skip this step and go directly to Calculate Results
+                        setCurrentStep(currentStep + 1); 
                         return null;
                     }
                 default:

@@ -302,7 +302,8 @@ const getPrevYearAvailable = () => {
   return (
     <Container className="filter-form-container">
       <div className="section">
-        <h2>{t('compareElectricityPrice')}</h2>
+        <h3>{t('compareElectricityPrice')}</h3>
+        <br />
         <div className="intro-text">
           <p>{t('introText1')}</p>
           <p>

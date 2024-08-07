@@ -37,6 +37,7 @@ const initialFormData: FormDataParams = {
     numberOfResidents: 1,
     hasSolarPanels: false,
     solarPanelCount: 1
+    
 };
 
 type HouseType = 'Apartmenthouse' | 'Terracedhouse' | 'Detachedhouse' | 'Cottage';
@@ -59,6 +60,7 @@ const ElectricityPriceForm: React.FC = () => {
     const { t } = useTranslation();
     const { i18n } = useTranslation();
     const [showProgressBar, setShowProgressBar] = useState(true);
+    const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
 
     useEffect(() => {
         // Load saved state from localStorage if available
@@ -76,6 +78,8 @@ const ElectricityPriceForm: React.FC = () => {
             setShowSpotPrice(state.showSpotPrice);
             setShowFixedPrice(state.showFixedPrice);
             setShowConsumption(state.showConsumption);
+            setShowProgressBar(state.showProgressBar);
+            setCurrentMonthIndex(state.currentMonthIndex);
         }
     }, []);
     useEffect(() => {
@@ -92,11 +96,13 @@ const ElectricityPriceForm: React.FC = () => {
             selectedHeatingType,
             showSpotPrice,
             showFixedPrice,
-            showConsumption
+            showConsumption,
+            showProgressBar,
+            currentMonthIndex
         }));
-    }, [formData, result, currentStep, validationErrors, showErrors, selectedHouseType, selectedWorkShiftType, selectedHeatingType, showSpotPrice, showFixedPrice, showConsumption]);
+    }, [formData, result, currentStep, validationErrors, showErrors, selectedHouseType, selectedWorkShiftType, selectedHeatingType, showSpotPrice, showFixedPrice, showConsumption, showProgressBar, currentMonthIndex]);
         
-
+  
     const skipFloorHeating = (heatingType: HeatingType): boolean => {
         return heatingType === 'ElectricHeating';
     };
@@ -255,6 +261,7 @@ const ElectricityPriceForm: React.FC = () => {
         if (result !== null) {
             return null;
         }
+        
 
         switch (currentStep) {
             case 1:
@@ -725,141 +732,188 @@ const ElectricityPriceForm: React.FC = () => {
         
 
 
-    const renderChart = (): React.ReactNode => {
-        if (!result || !Array.isArray(result.MonthlyData) || result.MonthlyData.length === 0) {
-            return <p>Ei kuukausidataa saatavilla.</p>;
-        }
-
-        const labels = result.MonthlyData.map((month, year) => {
-            let monthName;
-            if (i18n.language === 'en') {
-                 monthName = new Date(year, month.Month - 1).toLocaleString('en-US', { month: 'long' });
-                 return monthName.charAt(0).toUpperCase() + monthName.slice(1);
+        const renderChart = (): React.ReactNode => {
+            if (!result || !Array.isArray(result.MonthlyData) || result.MonthlyData.length === 0) {
+                return <p>Ei kuukausidataa saatavilla.</p>;
             }
-            else if(i18n.language === 'fi') {
-                 monthName = new Date(year, month.Month - 1).toLocaleString('fi-FI', { month: 'long' });
-                 return monthName.charAt(0).toUpperCase() + monthName.slice(1);
-            }
-           
-        });
-        const consumptionData = result.MonthlyData.map((month) => month.Consumption);
-        const spotPriceData = result.MonthlyData.map((month) => month.SpotPriceTotal);
-        const fixedPriceData = result.MonthlyData.map((month) => month.FixedPriceTotal);
-
-        const chartData = {
-            labels: labels,
-            datasets: [
-                ...(showSpotPrice ? [{
-                    label: t('showSpotPrice'),
-                    backgroundColor: '#4682B4',
-                    data: spotPriceData,
-                }] : []),
-                ...(showFixedPrice ? [{
-                    label: t('showFixedPrice'),
-                    backgroundColor: '#DC143C',
-                    data: fixedPriceData,
-                }] : []),
-                ...(showConsumption ? [{
-                    label: t('showConsumption'),
-                    backgroundColor: '#32CD32',
-                    data: consumptionData,
-                    datalabels: {
-                        color: '#333',
-                    },
-                }] : []),
-            ],
-            datalabels: {
-                labels,
-            },
-        };
-
-        return (
-            <div className="chart-container">
-                <h2 style={{ textAlign: 'center' }}>{t('MonthlyResults')}</h2>
-                <Bar
-                  data={chartData} 
-                  options={{
-                    plugins: {
-                        legend: {
-                            position: 'top' as const,
-                        },
-                        tooltip: {
-                          callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.dataset.label === 'Kulutus') {
-                                        label += context.raw + ' kWh';
-                                    } else {
-                                        label += context.raw + ' €';
-                                    }
-                                    return label;
-                                }
-                            } 
-                        },
+        
+            const maxItems = isMobile() ? 6 : 12;
+            const startIndex = isMobile() ? currentMonthIndex : 0;
+            const endIndex = startIndex + maxItems;
+        
+            const filteredData = result.MonthlyData.slice(startIndex, endIndex);
+        
+            const labels = filteredData.map((month, index) => {
+                let monthName;
+                if (i18n.language === 'en') {
+                    monthName = new Date(0, month.Month - 1).toLocaleString('en-US', { month: 'long' });
+                } else if (i18n.language === 'fi') {
+                    monthName = new Date(0, month.Month - 1).toLocaleString('fi-FI', { month: 'long' });
+                }
+                
+                if (monthName) {
+                    return monthName.charAt(0).toUpperCase() + monthName.slice(1);
+                } else {
+                    return ''; 
+                }
+            });
+        
+            const consumptionData = filteredData.map((month) => month.Consumption);
+            const spotPriceData = filteredData.map((month) => month.SpotPriceTotal);
+            const fixedPriceData = filteredData.map((month) => month.FixedPriceTotal);
+        
+            const chartData = {
+                labels: labels,
+                datasets: [
+                    ...(showSpotPrice ? [{
+                        label: t('showSpotPrice'),
+                        backgroundColor: '#4682B4',
+                        data: spotPriceData,
+                    }] : []),
+                    ...(showFixedPrice ? [{
+                        label: t('showFixedPrice'),
+                        backgroundColor: '#DC143C',
+                        data: fixedPriceData,
+                    }] : []),
+                    ...(showConsumption ? [{
+                        label: t('showConsumption'),
+                        backgroundColor: '#32CD32',
+                        data: consumptionData,
                         datalabels: {
-                            display: false,
+                            color: '#333',
                         },
-                    },
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
+                    }] : []),
+                ],
+                datalabels: {
+                    labels,
+                },
+            };
+        
+            return (
+                <div className="chart-container">
+                    <h2 style={{ textAlign: 'center' }}>{t('MonthlyResults')}</h2>
+                    <Bar
+                        data={chartData}
+                        options={{
+                            plugins: {
+                                legend: {
+                                    position: 'top' as const,
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            if (context.dataset.label === 'Kulutus') {
+                                                label += context.raw + ' kWh';
+                                            } else {
+                                                label += context.raw + ' €';
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                },
+                                datalabels: {
+                                    display: false,
+                                },
                             },
-                            grid: {
-                                display: false,
-                            },
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Hinta (€ ) / Kulutus kWh',
-                                font: {
-                                    size: 14,
-                                    weight: 'bold',
-                                }
-                            },
-                            grid: {
-                                color: '#ddd',
-                            },
-                        },
-                    }
-                  }}
-                  />
-            </div>
-        );
-    };
-
-    return (
-        <Container className="form-container">  
-
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                    },
+                                    grid: {
+                                        display: false,
+                                    },
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Hinta (€ ) / Kulutus kWh',
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold',
+                                        }
+                                    },
+                                    grid: {
+                                        color: '#ddd',
+                                    },
+                                },
+                            }
+                        }}
+                    />
+                </div>
+            );
+        };
+    const isMobile = () => window.innerWidth <= 768;
+        const handlePrevMonthPeriod = () => {
+            const step = isMobile() ? 6 : 15
+            if (isMobile()) {
+                // Handle mobile month navigation
+                if (result?.MonthlyData && currentMonthIndex - step >= 0) {
+                    setCurrentMonthIndex(currentMonthIndex - step);
+                }
+            } else {
+                // Handle regular month navigation
+                if (result?.MonthlyData && currentMonthIndex - step >= 0) {
+                    setCurrentMonthIndex(currentMonthIndex - step);
+                }
+            }
+        };
+        const handleNextMonthPeriod = () => {
+            const step = isMobile() ? 6 : 15;
+            if (isMobile()) {
+                // Handle mobile month navigation
+                if (result?.MonthlyData && currentMonthIndex + step < result.MonthlyData.length) {
+                    setCurrentMonthIndex(currentMonthIndex + step);
+                }
+            } else {
+                // Handle regular month navigation
+                if (result?.MonthlyData && currentMonthIndex + step < result?.MonthlyData.length) {
+                    setCurrentMonthIndex(currentMonthIndex + step);
+                }
+            }
+        };
+        const maxItems = isMobile() ? 6 : 15; // Limit to 6 for mobile, 15 otherwise
+        let months = result?.MonthlyData.filter(data => isMobile() ? true : data.Month === currentMonthIndex);
+          
+        if (isMobile()) {
+            months = months?.slice(currentMonthIndex, currentMonthIndex + maxItems);
+            console.log(months);
+            console.log(currentMonthIndex);
+        } else {
+            months = months?.slice(0, maxItems);
+            console.log(months);
+        }
+        return (
+            <Container className="form-container">
                 <h1 style={{ textAlign: 'center', fontFamily: 'Montserrat, sans-serif' }}>{t('MainHeader')}</h1>
                 <br />
                 <br />
-
+        
                 <Form onSubmit={handleSubmit}>
                     {renderStep()}
                     <br />
                     {showProgressBar && (
-                    <div className="progress-bar-container">
-                        <CircularProgressbar
-                            value={calculateProgressBar(currentStep, totalSteps)}
-                            text={`${Math.round(calculateProgressBar(currentStep, totalSteps))}%`}
-                            styles={buildStyles({
-                                pathColor: '#808080',
-                                textColor: 'black',
-                                trailColor: '#FFFFFF',
-                                textSize: '20px',
-                                pathTransitionDuration: 0.5,
-                            })}
-                            strokeWidth={15}
-                        />
-                    </div>
-                )}
+                        <div className="progress-bar-container">
+                            <CircularProgressbar
+                                value={calculateProgressBar(currentStep, totalSteps)}
+                                text={`${Math.round(calculateProgressBar(currentStep, totalSteps))}%`}
+                                styles={buildStyles({
+                                    pathColor: '#808080',
+                                    textColor: 'black',
+                                    trailColor: '#FFFFFF',
+                                    textSize: '20px',
+                                    pathTransitionDuration: 0.5,
+                                })}
+                                strokeWidth={15}
+                            />
+                        </div>
+                    )}
                 </Form>
                 {result && (
                     <>
@@ -867,7 +921,7 @@ const ElectricityPriceForm: React.FC = () => {
                             <div className="result-data-summary">
                                 <h3>{t('results')}</h3>
                                 <p>{t('resultDescription')} <b>{result.CalculationYears}</b></p>
-                                <p>{t('cheaperOptionDescription')} <b>{result.CheaperOption === 'Spot price' ? t('spotElectricity') : t('fixedElectricity') + ''}</b></p> 
+                                <p>{t('cheaperOptionDescription')} <b>{result.CheaperOption === 'Spot price' ? t('spotElectricity') : t('fixedElectricity') + ''}</b></p>
                                 <p className="price-difference">{t('priceDifference')} {result.CostDifference}€</p>
                             </div>
                             <div className="result-data-keywords">
@@ -875,31 +929,49 @@ const ElectricityPriceForm: React.FC = () => {
                                 <p>{t('spotElectricityPrice')} <span className="dynamic-value">{result.TotalSpotPriceCost}</span> €</p>
                                 <p>{t('fixedElectricityPrice')} <span className="dynamic-value">{result.TotalFixedPriceCost}</span> €</p>
                                 <p>{t('estimatedAverageHourlySpotPrice')} <span className="dynamic-value">{result.AverageHourlySpotPrice}</span> c/kWh</p>
-                                
                             </div>
                         </div>
                         <div className="graph-options">
                             <Form.Check
-                            type="checkbox"
-                            label={t('showSpotPrice')}
-                            checked={showSpotPrice}
-                            onChange={() => setShowSpotPrice(!showSpotPrice)}
-                            className="form-check"
+                                type="checkbox"
+                                label={t('showSpotPrice')}
+                                checked={showSpotPrice}
+                                onChange={() => setShowSpotPrice(!showSpotPrice)}
+                                className="form-check"
                             />
                             <Form.Check
-                            type="checkbox"
-                            label={t('showFixedPrice')}
-                            checked={showFixedPrice}
-                            onChange={() => setShowFixedPrice(!showFixedPrice)}
-                            className="form-check"
+                                type="checkbox"
+                                label={t('showFixedPrice')}
+                                checked={showFixedPrice}
+                                onChange={() => setShowFixedPrice(!showFixedPrice)}
+                                className="form-check"
                             />
                             <Form.Check
-                            type="checkbox"
-                            label={t('showConsumption')}
-                            checked={showConsumption}
-                            onChange={() => setShowConsumption(!showConsumption)}
-                            className="form-check"
+                                type="checkbox"
+                                label={t('showConsumption')}
+                                checked={showConsumption}
+                                onChange={() => setShowConsumption(!showConsumption)}
+                                className="form-check"
                             />
+                        </div>
+                        <div className="chart-controls">
+                        {isMobile() && (
+                            <div className="month-period-controls">
+                                <Button
+                                    onClick={handlePrevMonthPeriod}
+                                    disabled={currentMonthIndex === 0}
+                                >
+                                    {t('previous')}
+                                </Button>
+                                <Button
+                                    onClick={handleNextMonthPeriod}
+                                    disabled={currentMonthIndex + (isMobile() ? 6 : 15) >= (result?.MonthlyData?.length || 0)}
+                                >
+                                    {t('next')}
+                                </Button>
+                            </div>
+                            
+                        )}
                         </div>
                         <br />
                         {renderChart()}
@@ -908,8 +980,8 @@ const ElectricityPriceForm: React.FC = () => {
                         </div>
                     </>
                 )}
-        </Container>
-    );
-};
+            </Container>
+        );
+    };
 
 export default ElectricityPriceForm;

@@ -6,7 +6,6 @@
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
   position: relative;
 }
 
@@ -129,7 +128,7 @@ select {
 /* Chart container */
 .chart-container {
   position: relative;
-  height: 500px; /* Increased height for better chart visibility */
+  height: 500px; 
   background-color: #fff;
   padding: 1.5rem;
   border-radius: 8px;
@@ -224,7 +223,7 @@ select {
 }
 
 .result-data-keywords p .dynamic-value {
-  color: #f5ba3c; /* Color for the dynamic values */
+  color: #f5ba3c; 
 }
 
 .result-data-keywords p:first-of-type {
@@ -252,9 +251,6 @@ select {
   border-color: black;
 }
 
-
-/* PROGRESSBAR */
-
 .progress-bar-container {
   position: absolute;
   bottom: 25px;
@@ -272,4 +268,35 @@ select {
     width: 60px;
     height: 60px;
   }
+}
+
+.chart-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.chart-controls .btn {
+  flex: 1;
+  margin:  0.5rem;
+}
+
+
+.chart-controls button {
+  background-color: black;
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  cursor: pointer;
+  transition: background-color 0.3s ease; 
+}
+
+.chart-controls button:hover {
+  background-color: #f5ba3c;
+}
+
+.chart-controls button:disabled {
+  background-color: #ccc; 
+  cursor: not-allowed;
 }

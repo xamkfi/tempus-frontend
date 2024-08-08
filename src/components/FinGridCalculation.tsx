@@ -151,7 +151,24 @@ const FilterForm: React.FC = () => {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-  const isMobile = () => window.innerWidth <= 768;
+  
+  const isMobile = (() => {
+  
+  const userAgent = navigator.userAgent || navigator.vendor;
+  const mobileUserAgents = ['android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone'];
+
+  const isMobileDevice = mobileUserAgents.some(mobileAgent => userAgent.toLowerCase().includes(mobileAgent));
+
+  
+  const isMobileScreen = window.innerWidth <= 768;
+
+
+  const isMobile = isMobileDevice || isMobileScreen;
+
+ 
+  return isMobile;
+})
+
   const getGraphData = () => {
     if (!resultData) return { labels: [], datasets: [] };
 
@@ -465,7 +482,7 @@ const getPrevYearAvailable = () => {
 )}
 </div>
           
-
+            
           <div className="chart-container">
             <Bar
               data={getGraphData()}

@@ -857,7 +857,23 @@ const ElectricityPriceForm: React.FC = () => {
                 </div>
             );
         };
-    const isMobile = () => window.innerWidth <= 768;
+        const isMobile = (() => {
+  
+            const userAgent = navigator.userAgent || navigator.vendor;
+            const mobileUserAgents = ['android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone'];
+          
+            const isMobileDevice = mobileUserAgents.some(mobileAgent => userAgent.toLowerCase().includes(mobileAgent));
+          
+            
+            const isMobileScreen = window.innerWidth <= 768;
+          
+          
+            const isMobile = isMobileDevice || isMobileScreen;
+          
+           
+            return isMobile;
+          })
+          
         const handlePrevMonthPeriod = () => {
             const step = isMobile() ? 6 : 15
             if (isMobile()) {

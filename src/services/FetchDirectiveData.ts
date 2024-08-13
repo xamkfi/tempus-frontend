@@ -1,7 +1,7 @@
 import { FormDataParams, CalculationResult } from '../models/FormDataParams';
 
 export const calculatePriceAndConsumption = async (formData: FormDataParams): Promise<CalculationResult> => {
-    // Construct the query parameters
+
     const queryParams = new URLSearchParams({
         Year: formData.year.toString(),
         FixedPrice: formData.directiveFixedPrice.toString(),
@@ -29,7 +29,6 @@ export const calculatePriceAndConsumption = async (formData: FormDataParams): Pr
         }
     });
 
-    // Make the GET request
     const response = await fetch(`${process.env.REACT_APP_CALCULATION_SERVICE_URL}?${queryParams}`, {
         method: 'POST',
         headers: {

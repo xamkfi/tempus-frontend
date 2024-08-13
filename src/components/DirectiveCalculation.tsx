@@ -14,7 +14,6 @@ import  '../styles/IconStyles.css';
 import { useTranslation } from 'react-i18next';
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import 'react-circular-progressbar/dist/styles.css';
-import { use } from "i18next";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, ChartJSTooltip, Legend, ChartDataLabels);
 
@@ -111,11 +110,15 @@ const ElectricityPriceForm: React.FC = () => {
         return housetype === 'Apartmenthouse';
     };
 
+    
     const totalSteps = 8;
     const calculateProgressBar = (currentStep: number, totalSteps: number): number => {
-        return (currentStep / totalSteps) * 100;
+        if (currentStep === totalSteps) {
+            return 100;
+        }
+        return ((currentStep - 1) / (totalSteps - 1)) * 100;
     };
-    
+    const progress = calculateProgressBar(currentStep, totalSteps);
 
     const renderTooltip = (props: any) => (
         <BootstrapTooltip id="button-tooltip" {...props}>
@@ -262,8 +265,6 @@ const ElectricityPriceForm: React.FC = () => {
         setSelectedHeatingType(null);
         setShowProgressBar(true);
     };
-
-    const progress = calculateProgressBar(currentStep, totalSteps);
 
     const renderStep = (): React.ReactNode => {
         if (result !== null) {
@@ -667,7 +668,7 @@ const ElectricityPriceForm: React.FC = () => {
                     {formData.houseType === 'Apartmenthouse' || formData.houseType === 'Terracedhouse'? (
                         <div className="nextPrevButtons">
                             <Button className="prevButton" variant="secondary" onClick={handlePrevious}>{t('PreviousButton')}</Button>
-                            <Button variant="primary" onClick={handleSubmit}>{t('CalculateResultsButton')}</Button>
+                            <Button variant="primary" className="calcResultBtn" onClick={handleSubmit}>{t('CalculateResultsButton')}</Button>
                         </div>
                     ) : (
                         <>

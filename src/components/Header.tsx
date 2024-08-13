@@ -13,7 +13,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <Row className="justify-content-center">
+      <Row className="justify-content-center" style={{ backgroundColor: '#f5ba3c', paddingBottom: '20px' }}>
         <Col xs="auto">
           <div className = "header-container">
             <h1 className='mainHeader'>{t('title')}</h1>

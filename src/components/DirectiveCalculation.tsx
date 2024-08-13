@@ -36,7 +36,6 @@ const initialFormData: FormDataParams = {
     numberOfResidents: 1,
     hasSolarPanels: false,
     solarPanelCount: 1
-    
 };
 
 type HouseType = 'Apartmenthouse' | 'Terracedhouse' | 'Detachedhouse' | 'Cottage';
@@ -83,7 +82,6 @@ const ElectricityPriceForm: React.FC = () => {
     }, []);
     useEffect(() => {
         // Save state to localStorage
-        
         localStorage.setItem('electricityPriceFormState', JSON.stringify({
             formData,
             result,
@@ -101,7 +99,6 @@ const ElectricityPriceForm: React.FC = () => {
         }));
     }, [formData, result, currentStep, validationErrors, showErrors, selectedHouseType, selectedWorkShiftType, selectedHeatingType, showSpotPrice, showFixedPrice, showConsumption, showProgressBar, currentMonthIndex]);
         
-  
     const skipFloorHeating = (heatingType: HeatingType): boolean => {
         return heatingType === 'ElectricHeating';
     };
@@ -110,7 +107,6 @@ const ElectricityPriceForm: React.FC = () => {
         return housetype === 'Apartmenthouse';
     };
 
-    
     const totalSteps = 8;
     const calculateProgressBar = (currentStep: number, totalSteps: number): number => {
         if (currentStep === totalSteps) {
@@ -270,15 +266,13 @@ const ElectricityPriceForm: React.FC = () => {
         if (result !== null) {
             return null;
         }
-        
 
         switch (currentStep) {
             case 1:
                 return (
                     <>
-
+                        {/* Initial information */}
                         <h2 style={{ textAlign: 'center' }}>{t('startingInformation')}</h2>
-
                         <br />
                         <div className="form-group">
                             <label className="year-label">{t('Year')}</label>
@@ -312,6 +306,7 @@ const ElectricityPriceForm: React.FC = () => {
             case 2:
                 return (
                     <>
+                        {/* Housetype */}
                         <h2 style={{ textAlign: 'center' }}>{t('houseType')}</h2>
                         <br />
                         <br />
@@ -363,6 +358,7 @@ const ElectricityPriceForm: React.FC = () => {
             case 3:
                 return (
                     <>
+                        {/* Apartment Information */}
                         <h2 style={{ textAlign: 'center' }}>{t('ApartmentInformation')}</h2>
                         <br />
                         <div className="form-group">
@@ -427,6 +423,7 @@ const ElectricityPriceForm: React.FC = () => {
             case 4:
                 return (
                     <>
+                        {/* Heating Type Information */}
                         <h2 style={{ textAlign: 'center' }}>{t('HeatingTypeInfo')}</h2>
                         <br />
                         <br />
@@ -478,6 +475,7 @@ const ElectricityPriceForm: React.FC = () => {
             case 5:
                 return (
                     <>
+                        {/* Floor Heating Information */}
                         <h2 style={{ textAlign: 'center' }}>{t('FloorHeating')}</h2>
                         <br />
                         <div className="form-group text-center">
@@ -526,6 +524,7 @@ const ElectricityPriceForm: React.FC = () => {
             case 6:
                 return (
                     <>
+                        {/* Electric Car Information */}
                         <h2 style={{ textAlign: 'center' }}>{t('ElectricCar')}</h2>
                         <br />
                         <div className="form-group text-center">
@@ -589,6 +588,7 @@ const ElectricityPriceForm: React.FC = () => {
             case 7:
                 return (
                     <>
+                    {/* Other Expenses */}
                     <h2 style={{ textAlign: 'center' }}>{t('OtherExpenses')}</h2>
                     <br />
                     <div className="form-group text-center">
@@ -684,6 +684,7 @@ const ElectricityPriceForm: React.FC = () => {
                     if (formData.houseType === 'Detachedhouse' || formData.houseType === 'Cottage') {
                         return (
                             <>
+                                {/* Solar Panel Information*/}
                                 <h2 style={{ textAlign: 'center' }}>{t('SolarPanelHeader')}</h2>
                                 <br />
                                 <div className="form-group text-center">
@@ -740,7 +741,6 @@ const ElectricityPriceForm: React.FC = () => {
         };
         
 
-
         const renderChart = (): React.ReactNode => {
             if (!result || !Array.isArray(result.MonthlyData) || result.MonthlyData.length === 0) {
                 return <p>Ei kuukausidataa saatavilla.</p>;
@@ -749,7 +749,6 @@ const ElectricityPriceForm: React.FC = () => {
             const maxItems = isMobile() ? 6 : 12;
             const startIndex = isMobile() ? currentMonthIndex : 0;
             const endIndex = startIndex + maxItems;
-        
             const filteredData = result.MonthlyData.slice(startIndex, endIndex);
         
             const labels = filteredData.map((month, index) => {
@@ -864,14 +863,9 @@ const ElectricityPriceForm: React.FC = () => {
             const mobileUserAgents = ['android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone'];
           
             const isMobileDevice = mobileUserAgents.some(mobileAgent => userAgent.toLowerCase().includes(mobileAgent));
-          
-            
             const isMobileScreen = window.innerWidth <= 768;
-          
-          
             const isMobile = isMobileDevice || isMobileScreen;
-          
-           
+
             return isMobile;
           })
           

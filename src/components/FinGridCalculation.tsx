@@ -66,7 +66,6 @@ const FilterForm: React.FC = () => {
   }, [fixedPrice, csvFile, resultData, error, timePeriod, currentDayIndex, currentWeekIndex, currentYear, showSpotPrice, showFixedPrice, showConsumption]);
 
   
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -81,7 +80,6 @@ const FilterForm: React.FC = () => {
         csvFile
       }
  
-  
       try {
         const data = await FetchDataService(params);
         setResultData(data);
@@ -120,9 +118,6 @@ const FilterForm: React.FC = () => {
     setCurrentMonthIndex(0);
     const firstyear = new Date().getFullYear() - 1;
     setCurrentYear(firstyear);
-    
-
-    
   };
 
   const formatDate = (dateString: string) => {
@@ -158,14 +153,9 @@ const FilterForm: React.FC = () => {
   const mobileUserAgents = ['android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone'];
 
   const isMobileDevice = mobileUserAgents.some(mobileAgent => userAgent.toLowerCase().includes(mobileAgent));
-
-  
   const isMobileScreen = window.innerWidth <= 768;
-
-
   const isMobile = isMobileDevice || isMobileScreen;
 
- 
   return isMobile;
 })
 
@@ -182,13 +172,13 @@ const FilterForm: React.FC = () => {
     if (timePeriod === 'day' && resultData.dailyData) {
       const days = resultData.dailyData.slice(currentDayIndex, currentDayIndex + maxItems);
       labels = days.map(data => `${formatDate(data.day)}`);
-      spotPrices = days.map(data => parseFloat(data.spotPrice.toFixed(2))); // Round to 2 decimal places
+      spotPrices = days.map(data => parseFloat(data.spotPrice.toFixed(2))); 
       fixedPrices = days.map(data => parseFloat(data.fixedPrice.toFixed(2)));
       consumptions = days.map(data => data.consumption);
   } else if (timePeriod === 'week' && resultData.weeklyData) {
       const weeks = resultData.weeklyData.slice(currentWeekIndex, currentWeekIndex + maxItems);
       labels = weeks.map(data => `Vk ${data.week}, ${data.year}`);
-      spotPrices = weeks.map(data => parseFloat(data.spotPrice.toFixed(2))); // Round to 2 decimal places
+      spotPrices = weeks.map(data => parseFloat(data.spotPrice.toFixed(2))); 
       fixedPrices = weeks.map(data => parseFloat(data.fixedPrice.toFixed(2)));
       consumptions = weeks.map(data => data.consumption);
   } else if (timePeriod === 'month' && resultData.monthlyData) {
@@ -203,7 +193,7 @@ const FilterForm: React.FC = () => {
       }
   
       labels = months.map(data => `${data.month}/${data.year}`);
-      spotPrices = months.map(data => parseFloat(data.spotPrice.toFixed(2))); // Round to 2 decimal places
+      spotPrices = months.map(data => parseFloat(data.spotPrice.toFixed(2)));
       fixedPrices = months.map(data => parseFloat(data.fixedPrice.toFixed(2)));
       consumptions = months.map(data => data.consumption);
   }
@@ -231,7 +221,6 @@ const FilterForm: React.FC = () => {
             datalabels: {
                 display: false,
                 color: '#333',
-                
             },
         });
     }
@@ -315,7 +304,6 @@ const getPrevYearAvailable = () => {
       }
   };
   
-
   return (
     <Container className="filter-form-container">
       <div className="section">
@@ -407,7 +395,6 @@ const getPrevYearAvailable = () => {
     </div>
   </>
 )}
-
       
       {resultData && (
         <>
@@ -493,8 +480,6 @@ const getPrevYearAvailable = () => {
     </div>
 )}
 </div>
-          
-            
           <div className="chart-container">
             <Bar
               data={getGraphData()}
@@ -522,8 +507,6 @@ const getPrevYearAvailable = () => {
                   datalabels: {
                     display: false,
                   },
-                  
-                  
                 },
                 responsive: true,
                 maintainAspectRatio: false,

@@ -5,10 +5,10 @@ import DirectiveCalculation from './components/DirectiveCalculation';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import './App.css';
-import Header from './components/Header'; // Import the Header component
-import InfoBox from './components/InfoBox'; // Import the InfoBox component
-import ButtonGroup from './components/ButtonGroup'; // Import the ButtonGroup component
-import Footer from './components/Footer'; // Import the Footer component
+import Header from './components/Header';
+import InfoBox from './components/InfoBox'; 
+import ButtonGroup from './components/ButtonGroup'; 
+import Footer from './components/Footer'; 
 
 const App: React.FC = () => {
   const [activeService, setActiveService] = useState<string>('fingrid');
@@ -22,7 +22,6 @@ const App: React.FC = () => {
 
     window.addEventListener('beforeunload', handleBeforeUnload);
 
-    // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };

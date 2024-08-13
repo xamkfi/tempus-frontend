@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../styles/instructions.css';
-import Header from './Header'; // Import the Header component
+import Header from './Header'; 
 import Footer from './Footer';
 const Instructions: React.FC = () => {
     const navigate = useNavigate();
@@ -11,12 +11,11 @@ const Instructions: React.FC = () => {
     const handleBackClick = () => {
         navigate('/');
     };
-    //test commit
 
     return (
         <>
             <Header /> {/* Keep the Header component outside the instructions container */}
-            <div className="instructions-container"> {/* New container for instructions content */}
+            <div className="instructions-container">
                 <div className="instructions">
                     <h2>{t('instructionsTitle')}</h2>
                     <div className="instruction-step">

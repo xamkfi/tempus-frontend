@@ -7,7 +7,7 @@ const InfoBox: React.FC = () => {
 
   return (
     <Row className="justify-content-center">
-      <Col>
+      <Col md={8}>
         <div className="info-box">
           <h3 dangerouslySetInnerHTML={{ __html: t('description') }} />
           <br />

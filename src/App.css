@@ -5,7 +5,9 @@
   border-radius: 20px; 
   text-align: center; 
   margin-top: 20px;
+  display: flex;
 }
+
 .mainHeader {
   	font-size: 3rem;
 }
@@ -20,12 +22,14 @@
   background-color: #f5ba3c;
   color: black;
   padding: 3rem 1rem; 
-  width: 100%;
+  max-width: 1320px;
+  align-items: center;
   text-align: center;
   font-size: 1.2rem;
   border-radius: 8px;
   margin-bottom: 1rem;
   margin-top: 1.3rem;
+  margin: 1.3rem auto 1rem;
 }
 
 .button-group {

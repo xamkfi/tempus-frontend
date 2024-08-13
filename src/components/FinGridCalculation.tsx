@@ -379,23 +379,35 @@ const getPrevYearAvailable = () => {
       {resultData && (
   <>
     <div className="result-data-container">
-    <div className="result-data-summary">
-  <h3>{t('results')}</h3>
-  <p>{t('timeperiodinfo')} <br></br> <b>{resultData.startDate ? ('') : ''} {resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</b></p>
-  <p>
-     {t('cheaperOption')}<b> {resultData.cheaperOption === 'Spot Price' ? t('spotElectricity') : t('fixedElectricity')}</b>
-  </p>
-  <p className="price-difference">{t('priceDifference')}: <b>{resultData.priceDifference?.toFixed(2) ?? 'N/A'} €</b></p>
-</div>
-<div className="result-data-keywords">
-  <p>{t('totalConsumption')}: <span className="dynamic-value">{resultData.totalConsumption?.toFixed(2) ?? 'N/A'}</span> kWh</p>
-  <p>{t('spotElectricityPrice')}: <span className="dynamic-value">{resultData.totalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
-  <p>{t('fixedElectricityPrice')}: <span className="dynamic-value">{resultData.totalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
-  <p>{t('time')}: <span className="dynamic-value">{resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</span></p>
-</div>
+      <div className="result-data-summary">
+        <h3>{t('results')}</h3>
+        <p>
+          {t('timeperiodinfo')} <br></br> 
+          <b>
+            {resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - 
+            {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}
+          </b>
+        </p>
+        <p>
+          {t('cheaperOption')}<b> {resultData.cheaperOption === 'Spot Price' ? t('spotElectricity') : t('fixedElectricity')}</b>
+        </p>
+        {resultData.cheaperOption === 'Spot Price' && (
+          <p><b>{t('equilevantFixedPriceBold')}</b>{t('equilevantFixedPrice')}<b> {resultData.equivalentFixedPrice?.toFixed(2)} €</b></p>
+        )}
+        <p className="price-difference">
+          {t('priceDifference')}: <b>{resultData.priceDifference?.toFixed(2) ?? 'N/A'} €</b>
+        </p>
+      </div>
+      <div className="result-data-keywords">
+        <p>{t('totalConsumption')}: <span className="dynamic-value">{resultData.totalConsumption?.toFixed(2) ?? 'N/A'}</span> kWh</p>
+        <p>{t('spotElectricityPrice')}: <span className="dynamic-value">{resultData.totalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('fixedElectricityPrice')}: <span className="dynamic-value">{resultData.totalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('time')}: <span className="dynamic-value">{resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</span></p>
+      </div>
     </div>
   </>
 )}
+
       
       {resultData && (
         <>

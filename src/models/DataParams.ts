@@ -8,6 +8,7 @@ export interface DataParams {
   startDate?: string;  
   endDate?: string;    
   priceDifference?: number;
+  equivalentFixedPrice?: number;
   dailyData?: Array<{
     day: string;
     spotPrice: number;

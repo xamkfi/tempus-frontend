@@ -143,6 +143,8 @@ const resources = {
       "EarlyYearError":"We only have data from 2015 and later",
       "FirePlaceUsageError": "You must provide fireplace usage",
       "SolarPanelHeader": "Solar Panels",
+      "equilevantFixedPrice": " fixed price: ",
+      "equilevantFixedPriceBold": "Equivalent "
     }
   },
   fi: {
@@ -281,6 +283,8 @@ const resources = {
       "SaunaUsageError": "Lisää saunan lämmitysmäärä",
       "SolarPanelCountError": "Lisää aurinkopaneelien määrä",
       "SolarPanelHeader": "Aurinkopaneelit",
+      "equilevantFixedPrice": ", joka vastaa pörssisähkön kokonaiskustannuksia: ",
+      "equilevantFixedPriceBold": "Kiinteä hinta "
 
     }
   }

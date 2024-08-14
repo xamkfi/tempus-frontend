@@ -912,8 +912,6 @@ const ElectricityPriceForm: React.FC = () => {
             <Container className="form-container">
                 <h1 style={{ textAlign: 'center', fontFamily: 'Montserrat, sans-serif' }}>{t('MainHeader')}</h1>
                 <br />
-                <br />
-        
                 <Form onSubmit={handleSubmit}>
                     {renderStep()}
                     <br />

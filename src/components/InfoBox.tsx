@@ -9,7 +9,7 @@ const InfoBox: React.FC = () => {
     <Row className="justify-content-center">
       <Col md={8}>
         <div className="info-box">
-          <h3 dangerouslySetInnerHTML={{ __html: t('description') }} />
+          <h3 className='info-title' dangerouslySetInnerHTML={{ __html: t('description') }} />
           <br />
           <div className='info-text-container'>
             <div className='info-text' dangerouslySetInnerHTML={{ __html: t('info1') }} />

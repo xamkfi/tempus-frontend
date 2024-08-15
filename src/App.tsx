@@ -40,8 +40,8 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
+      <Header />
       <Container fluid>
-        <Header />
         <InfoBox />
         <ButtonGroup activeService={activeService} setActiveService={setActiveService} />
         <Row className="justify-content-center">

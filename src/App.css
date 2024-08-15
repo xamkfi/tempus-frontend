@@ -1,21 +1,5 @@
-.header-container {
-  background-color: black;
-  color: white; 
-  padding: 20px; 
-  border-radius: 20px; 
-  text-align: center; 
-  margin-top: 20px;
-  display: flex;
-}
-
-.mainHeader {
-  	font-size: 3rem;
-}
-
-.header-container .h1 {
-  width: 300px;
-  height: auto;
-  max-width: 100%;
+.info-title {
+  font-size: 2rem;
 }
 
 .info-box {
@@ -32,22 +16,6 @@
   margin: 1.3rem auto 1rem;
 }
 
-.button-group {
-  margin-bottom: 1rem;
-  border-radius: 8px;
-}
-
-.button-group .btn-service {
-  padding: 1rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  margin-right: 0.5rem;
-  position: static;
-}
-.button-group .btn-service:hover {
-  background-color: black;
-  color : white;
-}
 
 .info-text-container {
   display: flex;
@@ -65,10 +33,15 @@
   width: calc(33% - 2rem); 
   box-sizing: border-box; 
 }
+
 @media (max-width: 768px) {
   .info-text {
     width: calc(100% - 2rem); 
     margin: 1rem 0; 
+  }
+
+  .info-title {
+    font-size: 1.5rem;
   }
 }
 
@@ -81,26 +54,12 @@
   color: black;
 }
 
-
 .header-text-center {
   margin-left: 73px;
 }
 
-#dropdown-basic-button {
-  background-color: black;
-  color: white; 
-}
+/*FOOTER*/
 
-#dropdown-basic-button + .dropdown-menu .dropdown-item {
-  background-color: #f5ba3c;
-  color: black;
-  font-weight: bolder;
-}
-
-#dropdown-basic-button + .dropdown-menu .dropdown-item.selected {
-  background-color: black;
-  color: white;
-}
 .footer {
   background-color: black;
   width: 100%;

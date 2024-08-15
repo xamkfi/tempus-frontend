@@ -22,4 +22,3 @@ export const FetchDataService = async (params: DataParams): Promise<DataParams> 
     throw error;
   }
 };
-

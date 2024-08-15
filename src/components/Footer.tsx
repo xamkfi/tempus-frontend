@@ -46,9 +46,6 @@ const Footer: React.FC = () => {
               <a href="https://www.twitter.com/xamkfi" className="text-white">
                 <span className="footer-icon-container"><XIcon className="footer-icon" /></span>
               </a> 
-              <a href="https://www.github.com/xamk" className="text-white">
-                <span className="footer-icon-container"><GitHubIcon className="footer-icon" /></span>
-              </a>
             </div>
           </Col>
         </Row>

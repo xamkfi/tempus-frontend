@@ -9,6 +9,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Lottie from 'lottie-react';
 import animationData from './loadingAnimation.json';
 import { useTranslation } from 'react-i18next';
+import { parse, format, isValid } from 'date-fns';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 const FilterForm: React.FC = () => {
@@ -120,21 +121,15 @@ const FilterForm: React.FC = () => {
     setCurrentYear(firstyear);
   };
 
-  const formatDate = (dateString: string) => {
-    const [day, month, year] = dateString.split('.');
-    const formattedDateString = `${year}-${month}-${day}`;
-    const date = new Date(formattedDateString);
+ const formatDate = (dateString: string) => {
+  const parsedDate = parse(dateString, 'dd.MM.yyyy', new Date());
 
-    if (isNaN(date.getTime())) {
-      return 'Invalid Date';
-    }
+  if (!isValid(parsedDate)) {
+    return 'Invalid Date';
+  }
 
-    const formattedMonth = String(date.getMonth() + 1).padStart(2, '0');
-    const formattedDay = String(date.getDate()).padStart(2, '0');
-    const formattedYear = date.getFullYear();
-
-    return `${formattedMonth}/${formattedDay}/${formattedYear}`;
-  };
+  return format(parsedDate, 'MM/dd/yyyy');
+};
 
   const formatStartDateEndDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -159,45 +154,45 @@ const FilterForm: React.FC = () => {
   return isMobile;
 })
 
-  const getGraphData = () => {
-    if (!resultData) return { labels: [], datasets: [] };
+const getGraphData = () => {
+  if (!resultData) return { labels: [], datasets: [] };
 
-    let labels: string[] = [];
-    let spotPrices: number[] = [];
-    let fixedPrices: number[] = [];
-    let consumptions: number[] = [];
+  let labels: string[] = [];
+  let spotPrices: number[] = [];
+  let fixedPrices: number[] = [];
+  let consumptions: number[] = [];
 
-    const maxItems = isMobile() ? 6 : 15; // Limit to 6 for mobile, 15 otherwise
+  const maxItems = isMobile() ? 6 : 15; // Limit to 6 for mobile, 15 otherwise
 
-    if (timePeriod === 'day' && resultData.dailyData) {
-      const days = resultData.dailyData.slice(currentDayIndex, currentDayIndex + maxItems);
-      labels = days.map(data => `${formatDate(data.day)}`);
-      spotPrices = days.map(data => parseFloat(data.spotPrice.toFixed(2))); 
-      fixedPrices = days.map(data => parseFloat(data.fixedPrice.toFixed(2)));
-      consumptions = days.map(data => data.consumption);
+  if (timePeriod === 'day' && resultData.dailyData) {
+    const days = resultData.dailyData.slice(currentDayIndex, currentDayIndex + maxItems);
+    labels = days.map(data => `${formatDate(data.day)}`);
+    spotPrices = days.map(data => parseFloat(data.spotPrice.toFixed(2))); 
+    fixedPrices = days.map(data => parseFloat(data.fixedPrice.toFixed(2)));
+    consumptions = days.map(data => data.consumption);
   } else if (timePeriod === 'week' && resultData.weeklyData) {
-      const weeks = resultData.weeklyData.slice(currentWeekIndex, currentWeekIndex + maxItems);
-      labels = weeks.map(data => `Vk ${data.week}, ${data.year}`);
-      spotPrices = weeks.map(data => parseFloat(data.spotPrice.toFixed(2))); 
-      fixedPrices = weeks.map(data => parseFloat(data.fixedPrice.toFixed(2)));
-      consumptions = weeks.map(data => data.consumption);
+    const weeks = resultData.weeklyData.slice(currentWeekIndex, currentWeekIndex + maxItems);
+    labels = weeks.map(data => `Vk ${data.week}, ${data.year}`);
+    spotPrices = weeks.map(data => parseFloat(data.spotPrice.toFixed(2))); 
+    fixedPrices = weeks.map(data => parseFloat(data.fixedPrice.toFixed(2)));
+    consumptions = weeks.map(data => data.consumption);
   } else if (timePeriod === 'month' && resultData.monthlyData) {
-      let months = resultData.monthlyData
-          .filter(data => isMobile() ? true : data.year === currentYear) // Handle year filter only if not mobile
-          .sort((a, b) => a.year - b.year); // Sort by year
-  
-      if (isMobile()) {
-          months = months.slice(currentMonthIndex, currentMonthIndex + maxItems);
-      } else {
-          months = months.slice(0, maxItems);
-      }
-  
-      labels = months.map(data => `${data.month}/${data.year}`);
-      spotPrices = months.map(data => parseFloat(data.spotPrice.toFixed(2)));
-      fixedPrices = months.map(data => parseFloat(data.fixedPrice.toFixed(2)));
-      consumptions = months.map(data => data.consumption);
+    let months = resultData.monthlyData
+        .filter(data => isMobile() ? true : data.year === currentYear) // Handle year filter only if not mobile
+        .sort((a, b) => a.year - b.year); // Sort by year
+
+    if (isMobile()) {
+        months = months.slice(currentMonthIndex, currentMonthIndex + maxItems);
+    } else {
+        months = months.slice(0, maxItems);
+    }
+
+    labels = months.map(data => `${data.month}/${data.year}`);
+    spotPrices = months.map(data => parseFloat(data.spotPrice.toFixed(2)));
+    fixedPrices = months.map(data => parseFloat(data.fixedPrice.toFixed(2)));
+    consumptions = months.map(data => data.consumption);
   }
-  
+
   const datasets: any[] = [];
   if (showSpotPrice) {
       datasets.push({
@@ -206,59 +201,90 @@ const FilterForm: React.FC = () => {
           data: spotPrices
       });
   }
-    if (showFixedPrice) {
-        datasets.push({
-            label: t('fixedPrice'),
-            backgroundColor: '#DC143C',
-            data: fixedPrices
-        });
-    }
-    if (showConsumption) {
-        datasets.push({
-            label: t('consumption'),
-            backgroundColor: '#32CD32',
-            data: consumptions,
-            datalabels: {
-                display: false,
-                color: '#333',
-            },
-        });
-    }
+  if (showFixedPrice) {
+      datasets.push({
+          label: t('fixedPrice'),
+          backgroundColor: '#DC143C',
+          data: fixedPrices
+      });
+  }
+  if (showConsumption) {
+      datasets.push({
+          label: t('consumption'),
+          backgroundColor: '#32CD32',
+          data: consumptions,
+          datalabels: {
+              display: false,
+              color: '#333',
+          },
+      });
+  }
 
-    return {
-        labels,
-        datasets,
-    };
+  return {
+      labels,
+      datasets,
+  };
 };
 
 
 const handleNextDayPeriod = () => {
   const step = isMobile() ? 6 : 15;
-  if (resultData?.dailyData && currentDayIndex + step < resultData.dailyData.length) {
-      setCurrentDayIndex(currentDayIndex + step);
+  if (resultData?.dailyData) {
+    const maxIndex = resultData.dailyData.length - step;
+ 
+    if (currentDayIndex < maxIndex) {
+      setCurrentDayIndex(prevIndex => Math.min(prevIndex + step, maxIndex));
+    }
   }
 };
 
 const handlePrevDayPeriod = () => {
   const step = isMobile() ? 6 : 15;
-  if (resultData?.dailyData && currentDayIndex - step >= 0) {
-      setCurrentDayIndex(currentDayIndex - step);
+  if (resultData?.dailyData) {
+    if (currentDayIndex > 0) {
+      setCurrentDayIndex(prevIndex => Math.max(prevIndex - step, 0));
+    }
   }
 };
 
 const handleNextWeekPeriod = () => {
   const step = isMobile() ? 6 : 15;
-  if (resultData?.weeklyData && currentWeekIndex + step < resultData.weeklyData.length) {
-      setCurrentWeekIndex(currentWeekIndex + step);
+  if (resultData?.weeklyData) {
+    const maxIndex = resultData.weeklyData.length - step;
+    if (currentWeekIndex < maxIndex) {
+      setCurrentWeekIndex(prevIndex => Math.min(prevIndex + step, maxIndex));
+    }
   }
 };
 
 const handlePrevWeekPeriod = () => {
   const step = isMobile() ? 6 : 15;
-  if (resultData?.weeklyData && currentWeekIndex - step >= 0) {
-      setCurrentWeekIndex(currentWeekIndex - step);
+  if (resultData?.weeklyData) {
+    if (currentWeekIndex > 0) {
+      setCurrentWeekIndex(prevIndex => Math.max(prevIndex - step, 0));
+    }
   }
 };
+
+const handleNextMonthPeriod = () => {
+  const step = isMobile() ? 6 : 15;
+  if (resultData?.monthlyData) {
+    const maxIndex = isMobile() ? resultData.monthlyData.length - step : resultData.monthlyData.length - 1;
+    if (currentMonthIndex < maxIndex) {
+      setCurrentMonthIndex(prevIndex => Math.min(prevIndex + step, maxIndex));
+    }
+  }
+};
+
+const handlePrevMonthPeriod = () => {
+  const step = isMobile() ? 6 : 15;
+  if (resultData?.monthlyData) {
+    if (currentMonthIndex > 0) {
+      setCurrentMonthIndex(prevIndex => Math.max(prevIndex - step, 0));
+    }
+  }
+};
+
 
 const getNextYearAvailable = () => {
   if (isMobile()) {
@@ -274,35 +300,8 @@ const getPrevYearAvailable = () => {
   return resultData?.monthlyData?.some(data => data.year === currentYear - 1) ?? false;
 };
 
-    const handleNextMonthPeriod = () => {
-      const step = isMobile() ? 6 : 15;
-      if (isMobile()) {
-          // Handle mobile month navigation
-          if (resultData?.monthlyData && currentMonthIndex + step < resultData.monthlyData.length) {
-              setCurrentMonthIndex(currentMonthIndex + step);
-          }
-      } else {
-          // Handle regular month navigation
-          if (resultData?.monthlyData && currentMonthIndex + step < resultData.monthlyData.length) {
-              setCurrentMonthIndex(currentMonthIndex + step);
-          }
-      }
-  };
-  
-  const handlePrevMonthPeriod = () => {
-      const step = isMobile() ? 6 : 15;
-      if (isMobile()) {
-          // Handle mobile month navigation
-          if (resultData?.monthlyData && currentMonthIndex - step >= 0) {
-              setCurrentMonthIndex(currentMonthIndex - step);
-          }
-      } else {
-          // Handle regular month navigation
-          if (resultData?.monthlyData && currentMonthIndex - step >= 0) {
-              setCurrentMonthIndex(currentMonthIndex - step);
-          }
-      }
-  };
+    
+
   
   return (
     <Container className="filter-form-container">
@@ -427,7 +426,7 @@ const getPrevYearAvailable = () => {
       <Button onClick={handlePrevDayPeriod} disabled={currentDayIndex === 0}>
         {t('previous')}
       </Button>
-      <Button onClick={handleNextDayPeriod} disabled={currentDayIndex + 15 >= (resultData.dailyData?.length || 0)}>
+      <Button onClick={handleNextDayPeriod} disabled={currentDayIndex + (isMobile() ? 6 : 15) >= (resultData.dailyData?.length || 0)}>
         {t('next')}
       </Button>
     </div>
@@ -437,7 +436,7 @@ const getPrevYearAvailable = () => {
       <Button onClick={handlePrevWeekPeriod} disabled={currentWeekIndex === 0}>
         {t('previous')}
       </Button>
-      <Button onClick={handleNextWeekPeriod} disabled={currentWeekIndex + 15 >= (resultData.weeklyData?.length || 0)}>
+      <Button onClick={handleNextWeekPeriod} disabled={currentWeekIndex + (isMobile() ? 6 : 15) >= (resultData.weeklyData?.length || 0)}>
         {t('next')}
       </Button>
     </div>

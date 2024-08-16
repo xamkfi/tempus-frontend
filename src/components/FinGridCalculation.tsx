@@ -380,7 +380,7 @@ const getPrevYearAvailable = () => {
           {t('cheaperOption')}<b> {resultData.cheaperOption === 'Spot Price' ? t('spotElectricity') : t('fixedElectricity')}</b>
         </p>
         {resultData.cheaperOption === 'Spot Price' && (
-          <p><b>{t('equilevantFixedPriceBold')}</b>{t('equilevantFixedPrice')}<b> {resultData.equivalentFixedPrice?.toFixed(2)} €</b></p>
+          <p><b>{t('equilevantFixedPriceBold')}</b>{t('equilevantFixedPrice')}<b> {resultData.equivalentFixedPrice?.toFixed(2)} {t('unit')} </b> </p>
         )}
         <p className="price-difference">
           {t('priceDifference')}: <b>{resultData.priceDifference?.toFixed(2) ?? 'N/A'} €</b>

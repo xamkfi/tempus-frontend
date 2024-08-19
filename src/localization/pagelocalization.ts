@@ -196,7 +196,7 @@ const resources = {
       "previousYear": "Edellinen vuosi",
       "nextYear": "Seuraava vuosi",
       "invalidDate": "Virheellinen päivämäärämuoto",
-      "readInstructions": "Lue kulutustiedoston lataus ohjeet",
+      "readInstructions": "Lue kulutustiedoston latausohjeet",
       "here": "täältä",
       "loadingAnimation": "Lataus animaatio",
       "Fingridcustomerportal": "Fingrid asiakasportaalista",

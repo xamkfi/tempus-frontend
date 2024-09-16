@@ -144,7 +144,11 @@ const resources = {
       "FirePlaceUsageError": "You must provide fireplace usage",
       "SolarPanelHeader": "Solar Panels",
       "equilevantFixedPrice": " fixed price: ",
-      "equilevantFixedPriceBold": "Equivalent "
+      "equilevantFixedPriceBold": "Equivalent ",
+      "optimizedSpotElectricityPrice": "ERSKAA",
+      "optimizedPriceDifference": "Optimized price difference",
+      "carInfo": "It is usually estimated that normal electric car consumpts about 1500-2000kWh per year.",
+      "OptimizeInfo": "The optimized price difference consists of a calculation where we transfer 25% of your daytime consumption to night and morning hours, when electricity is generally cheaper.",
     }
   },
   fi: {
@@ -207,8 +211,8 @@ const resources = {
       "timeperiodinfo": "Kulutustiedostosi mukaan aikavälillä",
       
       "totalConsumption": "Kulutus",
-      "spotElectricityPrice": "Pörssi-sähköhinta",
-      "fixedElectricityPrice": "Kiinteä-sähköhinta",
+      "spotElectricityPrice": "Pörssisähkö hinta",
+      "fixedElectricityPrice": "Kiinteä sähkö hinta",
       "time": "Aikaväli",
       "ChartMonth": "Kuukausi",
       "ChartTime": "Aika",
@@ -283,8 +287,12 @@ const resources = {
       "SaunaUsageError": "Lisää saunan lämmitysmäärä",
       "SolarPanelCountError": "Lisää aurinkopaneelien määrä",
       "SolarPanelHeader": "Aurinkopaneelit",
-      "equilevantFixedPrice": ", joka vastaa pörssisähkön kokonaiskustannuksia: ",
-      "equilevantFixedPriceBold": "Kiinteä hinta "
+      "equilevantFixedPrice": ", joka vastaa pörssisähkön kustannuksia: ",
+      "equilevantFixedPriceBold": "Kiinteä hinta ",
+      "optimizedSpotElectricityPrice": "Pörssisähkö hinta, jos kulutuksesi optimoitaisiin 25% halvemmille tunneille",
+      "optimizedPriceDifference": "Optimoitu hintaero",
+      "carInfo": "Sähköauton keskimääräinen kulutus on noin 1500-2000kWh vuodessa",
+      "OptimizeInfo": "Optimoitu hintaero perustuu laskentaan, jossa siirrämme 25% päivittäisestä kulutuksestasi yö- ja aamu tunneille, jolloin sähkö on yleensä halvempaa.",
 
     }
   }

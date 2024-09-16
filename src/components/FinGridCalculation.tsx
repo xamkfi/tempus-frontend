@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Alert, OverlayTrigger } from 'react-bootstrap';
 import { FetchDataService } from '../services/FetchDataService';
 import DataParams from '../models/DataParams';
 import '../styles/FinGridCalculation.css';
@@ -10,6 +10,8 @@ import Lottie from 'lottie-react';
 import animationData from './loadingAnimation.json';
 import { useTranslation } from 'react-i18next';
 import { parse, format, isValid } from 'date-fns';
+import { Tooltip as BootstrapTooltip } from 'react-bootstrap';
+import { Help } from '@mui/icons-material';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 const FilterForm: React.FC = () => {
@@ -66,7 +68,11 @@ const FilterForm: React.FC = () => {
     }));
   }, [fixedPrice, csvFile, resultData, error, timePeriod, currentDayIndex, currentWeekIndex, currentYear, showSpotPrice, showFixedPrice, showConsumption]);
 
-  
+  const renderTooltip = (props: any) => (
+    <BootstrapTooltip id="button-tooltip" {...props}>
+        {t('OptimizeInfo')}
+    </BootstrapTooltip>
+  );   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -300,7 +306,7 @@ const getPrevYearAvailable = () => {
   return resultData?.monthlyData?.some(data => data.year === currentYear - 1) ?? false;
 };
 
-    
+
 
   
   return (
@@ -376,20 +382,29 @@ const getPrevYearAvailable = () => {
           </b>
         </p>
         <p>
-          {t('cheaperOption')}<b> {resultData.cheaperOption === 'Spot Price' ? t('spotElectricity') : t('fixedElectricity')}</b>
+          {t('cheaperOption')}<b> {resultData.cheaperOption === 'SpotPrice' ? t('spotElectricity') : t('fixedElectricity')}</b>
         </p>
-        {resultData.cheaperOption === 'Spot Price' && (
+        {resultData.cheaperOption === 'SpotPrice' && (
           <p><b>{t('equilevantFixedPriceBold')}</b>{t('equilevantFixedPrice')}<b> {resultData.equivalentFixedPrice?.toFixed(2)} {t('unit')} </b> </p>
         )}
         <p className="price-difference">
           {t('priceDifference')}: <b>{resultData.priceDifference?.toFixed(2) ?? 'N/A'} €</b>
+          
         </p>
+        <p className="price-difference">
+          {t('optimizedPriceDifference')}: <b>{resultData.optimizedPriceDifference?.toFixed(2) ?? 'N/A'} €</b>
+        </p>
+        <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+                                            <Help style={{ height: '35px', width: '35px'}} />
+                                        </OverlayTrigger>
       </div>
       <div className="result-data-keywords">
         <p>{t('totalConsumption')}: <span className="dynamic-value">{resultData.totalConsumption?.toFixed(2) ?? 'N/A'}</span> kWh</p>
         <p>{t('spotElectricityPrice')}: <span className="dynamic-value">{resultData.totalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
         <p>{t('fixedElectricityPrice')}: <span className="dynamic-value">{resultData.totalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
         <p>{t('time')}: <span className="dynamic-value">{resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</span></p>
+        <p>{t('optimizedSpotElectricityPrice')}: <span className="dynamic-value">{resultData.totalOptimizedSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+
       </div>
     </div>
   </>

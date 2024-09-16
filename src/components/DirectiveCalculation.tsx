@@ -118,7 +118,7 @@ const ElectricityPriceForm: React.FC = () => {
 
     const renderTooltip = (props: any) => (
         <BootstrapTooltip id="button-tooltip" {...props}>
-            It is usually estimated that normal electric car consumpts about 1500-2000kWh per year.
+            {t('carInfo')}
         </BootstrapTooltip>
     );
 

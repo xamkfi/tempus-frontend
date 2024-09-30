@@ -23,6 +23,8 @@ export interface CalculationResult {
   TotalFixedPriceCost: number;
   TotalSpotPriceCost: number;
   TotalDirectiveConsumption: number;
+  EstimatedMinConsumption: number;
+  EstimatedMaxConsumption: number;
   CheaperOption?: string;
   CostDifference: number;
   AverageHourlySpotPrice: number;

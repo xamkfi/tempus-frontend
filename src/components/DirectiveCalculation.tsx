@@ -943,6 +943,8 @@ const ElectricityPriceForm: React.FC = () => {
                             </div>
                             <div className="result-data-keywords">
                                 <p>{t('directiveConsumption')} <span className="dynamic-value">{result.TotalDirectiveConsumption}</span> kWh</p>
+                                <p>{t('estimatedMinConsumption')} <span className="dynamic-value">{result.EstimatedMinConsumption}</span> kWh</p>
+                                <p>{t('estimatedMaxConsumption')} <span className="dynamic-value">{result.EstimatedMaxConsumption}</span> kWh</p>
                                 <p>{t('spotElectricityPrice')} <span className="dynamic-value">{result.TotalSpotPriceCost}</span> €</p>
                                 <p>{t('fixedElectricityPrice')} <span className="dynamic-value">{result.TotalFixedPriceCost}</span> €</p>
                                 <p>{t('estimatedAverageHourlySpotPrice')} <span className="dynamic-value">{result.AverageHourlySpotPrice}</span> c/kWh</p>

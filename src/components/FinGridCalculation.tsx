@@ -184,20 +184,29 @@ const getGraphData = () => {
     consumptions = weeks.map(data => data.consumption);
   } else if (timePeriod === 'month' && resultData.monthlyData) {
     let months = resultData.monthlyData
-        .filter(data => isMobile() ? true : data.year === currentYear) // Handle year filter only if not mobile
-        .sort((a, b) => a.year - b.year); // Sort by year
+    .filter(data => isMobile() ? true : data.year === currentYear) // Handle year filter only if not mobile
+    .sort((a, b) => a.year - b.year); // Sort by year
 
-    if (isMobile()) {
-        months = months.slice(currentMonthIndex, currentMonthIndex + maxItems);
+if (isMobile()) {
+    // Determine the maximum number of items to display
+    const isYearEnd = currentMonthIndex >= months.length - 1; // Check if we are at the last month
+    if (isYearEnd) {
+        // If we are at the end of the year, only show January of the next year
+        const nextYear = currentYear + 1;
+        const nextMonthData = resultData.monthlyData.find(data => data.year === nextYear && data.month === 1);
+        months = nextMonthData ? [nextMonthData] : []; // Set months to only include January of the next year
     } else {
-        months = months.slice(0, maxItems);
+        months = months.slice(currentMonthIndex, currentMonthIndex + maxItems);
     }
+} else {
+    months = months.slice(0, maxItems);
+}
 
-    labels = months.map(data => `${data.month}/${data.year}`);
-    spotPrices = months.map(data => parseFloat(data.spotPrice.toFixed(2)));
-    fixedPrices = months.map(data => parseFloat(data.fixedPrice.toFixed(2)));
-    consumptions = months.map(data => data.consumption);
-  }
+labels = months.map(data => `${data.month}/${data.year}`);
+spotPrices = months.map(data => parseFloat(data.spotPrice.toFixed(2)));
+fixedPrices = months.map(data => parseFloat(data.fixedPrice.toFixed(2)));
+consumptions = months.map(data => data.consumption);
+}
 
   const datasets: any[] = [];
   if (showSpotPrice) {
@@ -275,12 +284,28 @@ const handlePrevWeekPeriod = () => {
 const handleNextMonthPeriod = () => {
   const step = isMobile() ? 6 : 15;
   if (resultData?.monthlyData) {
-    const maxIndex = isMobile() ? resultData.monthlyData.length - step : resultData.monthlyData.length - 1;
-    if (currentMonthIndex < maxIndex) {
-      setCurrentMonthIndex(prevIndex => Math.min(prevIndex + step, maxIndex));
-    }
+      const maxIndex = resultData.monthlyData.length - 1;
+
+      if (currentMonthIndex >= maxIndex) {
+          // If we're at the last index, reset to show January of the next year
+          const nextYear = currentYear + 1;
+          const nextMonthData = resultData.monthlyData.find(data => data.year === nextYear && data.month === 1);
+
+          if (nextMonthData) {
+              // Update to show January of the next year
+              setCurrentMonthIndex(0); // Reset the index to the first month (January)
+              setCurrentYear(nextYear); // Update the current year
+          }
+      } else {
+          // Regular month navigation
+          if (currentMonthIndex < maxIndex) {
+              setCurrentMonthIndex(prevIndex => Math.min(prevIndex + step, maxIndex));
+          }
+      }
   }
 };
+
+
 
 const handlePrevMonthPeriod = () => {
   const step = isMobile() ? 6 : 15;

@@ -95,6 +95,13 @@ const Footer: React.FC = () => {
             <p className="text-white mb-0">{t('DataResource')} <a href="https://www.entsoe.eu/data/transparency-platform/" className="text-white">Entso-E</a></p>
           </Col>
         </Row>
+        <Row className='justify-content-center mt-3'>
+          <Col md={6} className="text-center">
+            <p className="text-white mb-0">
+              <a href="/privacy-notice" className="text-white">{t('privacy.header0')}</a> {/* Privacy Policy */}
+            </p>
+          </Col>
+        </Row>
       </Container>
     </footer>
   );

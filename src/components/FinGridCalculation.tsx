@@ -95,9 +95,9 @@ const FilterForm: React.FC = () => {
         setCurrentWeekIndex(0);
         setCurrentMonthIndex(0);
   
-        if (data.monthlyData) {
-          const sortedMonthlyData = data.monthlyData.sort((a, b) => a.year - b.year);
-          setCurrentYear(sortedMonthlyData[0].year);
+        if (data.MonthlyData) {
+          const sortedMonthlyData = data.MonthlyData.sort((a, b) => a.Year - b.Year);
+          setCurrentYear(sortedMonthlyData[0].Year);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -170,22 +170,22 @@ const getGraphData = () => {
 
   const maxItems = isMobile() ? 6 : 15; // Limit to 6 for mobile, 15 otherwise
 
-  if (timePeriod === 'day' && resultData.dailyData) {
-    const days = resultData.dailyData.slice(currentDayIndex, currentDayIndex + maxItems);
-    labels = days.map(data => `${formatDate(data.day)}`);
-    spotPrices = days.map(data => parseFloat(data.spotPrice.toFixed(2))); 
-    fixedPrices = days.map(data => parseFloat(data.fixedPrice.toFixed(2)));
-    consumptions = days.map(data => data.consumption);
-  } else if (timePeriod === 'week' && resultData.weeklyData) {
-    const weeks = resultData.weeklyData.slice(currentWeekIndex, currentWeekIndex + maxItems);
-    labels = weeks.map(data => `Vk ${data.week}, ${data.year}`);
-    spotPrices = weeks.map(data => parseFloat(data.spotPrice.toFixed(2))); 
-    fixedPrices = weeks.map(data => parseFloat(data.fixedPrice.toFixed(2)));
-    consumptions = weeks.map(data => data.consumption);
-  } else if (timePeriod === 'month' && resultData.monthlyData) {
-    let months = resultData.monthlyData
-    .filter(data => isMobile() ? true : data.year === currentYear) // Handle year filter only if not mobile
-    .sort((a, b) => a.year - b.year); // Sort by year
+  if (timePeriod === 'day' && resultData.DailyData) {
+    const days = resultData.DailyData.slice(currentDayIndex, currentDayIndex + maxItems);
+    labels = days.map(data => `${formatDate(data.Day)}`);
+    spotPrices = days.map(data => parseFloat(data.SpotPrice.toFixed(2))); 
+    fixedPrices = days.map(data => parseFloat(data.FixedPrice.toFixed(2)));
+    consumptions = days.map(data => data.Consumption);
+  } else if (timePeriod === 'week' && resultData.WeeklyData) {
+    const weeks = resultData.WeeklyData.slice(currentWeekIndex, currentWeekIndex + maxItems);
+    labels = weeks.map(data => `Vk ${data.Week}, ${data.Year}`);
+    spotPrices = weeks.map(data => parseFloat(data.SpotPrice.toFixed(2))); 
+    fixedPrices = weeks.map(data => parseFloat(data.FixedPrice.toFixed(2)));
+    consumptions = weeks.map(data => data.Consumption);
+  } else if (timePeriod === 'month' && resultData.MonthlyData) {
+    let months = resultData.MonthlyData
+    .filter(data => isMobile() ? true : data.Year === currentYear) // Handle year filter only if not mobile
+    .sort((a, b) => a.Year - b.Year); // Sort by year
 
 if (isMobile()) {
     // Determine the maximum number of items to display
@@ -193,7 +193,7 @@ if (isMobile()) {
     if (isYearEnd) {
         // If we are at the end of the year, only show January of the next year
         const nextYear = currentYear + 1;
-        const nextMonthData = resultData.monthlyData.find(data => data.year === nextYear && data.month === 1);
+        const nextMonthData = resultData.MonthlyData.find(data => data.Year === nextYear && data.Month === 1);
         months = nextMonthData ? [nextMonthData] : []; // Set months to only include January of the next year
     } else {
         months = months.slice(currentMonthIndex, currentMonthIndex + maxItems);
@@ -202,10 +202,10 @@ if (isMobile()) {
     months = months.slice(0, maxItems);
 }
 
-labels = months.map(data => `${data.month}/${data.year}`);
-spotPrices = months.map(data => parseFloat(data.spotPrice.toFixed(2)));
-fixedPrices = months.map(data => parseFloat(data.fixedPrice.toFixed(2)));
-consumptions = months.map(data => data.consumption);
+labels = months.map(data => `${data.Month}/${data.Year}`);
+spotPrices = months.map(data => parseFloat(data.SpotPrice.toFixed(2)));
+fixedPrices = months.map(data => parseFloat(data.FixedPrice.toFixed(2)));
+consumptions = months.map(data => data.Consumption);
 }
 
   const datasets: any[] = [];
@@ -244,8 +244,8 @@ consumptions = months.map(data => data.consumption);
 
 const handleNextDayPeriod = () => {
   const step = isMobile() ? 6 : 15;
-  if (resultData?.dailyData) {
-    const maxIndex = resultData.dailyData.length - step;
+  if (resultData?.DailyData) {
+    const maxIndex = resultData.DailyData.length - step;
  
     if (currentDayIndex < maxIndex) {
       setCurrentDayIndex(prevIndex => Math.min(prevIndex + step, maxIndex));
@@ -255,7 +255,7 @@ const handleNextDayPeriod = () => {
 
 const handlePrevDayPeriod = () => {
   const step = isMobile() ? 6 : 15;
-  if (resultData?.dailyData) {
+  if (resultData?.DailyData) {
     if (currentDayIndex > 0) {
       setCurrentDayIndex(prevIndex => Math.max(prevIndex - step, 0));
     }
@@ -264,8 +264,8 @@ const handlePrevDayPeriod = () => {
 
 const handleNextWeekPeriod = () => {
   const step = isMobile() ? 6 : 15;
-  if (resultData?.weeklyData) {
-    const maxIndex = resultData.weeklyData.length - step;
+  if (resultData?.WeeklyData) {
+    const maxIndex = resultData.WeeklyData.length - step;
     if (currentWeekIndex < maxIndex) {
       setCurrentWeekIndex(prevIndex => Math.min(prevIndex + step, maxIndex));
     }
@@ -274,7 +274,7 @@ const handleNextWeekPeriod = () => {
 
 const handlePrevWeekPeriod = () => {
   const step = isMobile() ? 6 : 15;
-  if (resultData?.weeklyData) {
+  if (resultData?.WeeklyData) {
     if (currentWeekIndex > 0) {
       setCurrentWeekIndex(prevIndex => Math.max(prevIndex - step, 0));
     }
@@ -283,13 +283,13 @@ const handlePrevWeekPeriod = () => {
 
 const handleNextMonthPeriod = () => {
   const step = isMobile() ? 6 : 15;
-  if (resultData?.monthlyData) {
-      const maxIndex = resultData.monthlyData.length - 1;
+  if (resultData?.MonthlyData) {
+      const maxIndex = resultData.MonthlyData.length - 1;
 
       if (currentMonthIndex >= maxIndex) {
           // If we're at the last index, reset to show January of the next year
           const nextYear = currentYear + 1;
-          const nextMonthData = resultData.monthlyData.find(data => data.year === nextYear && data.month === 1);
+          const nextMonthData = resultData.MonthlyData.find(data => data.Year === nextYear && data.Month === 1);
 
           if (nextMonthData) {
               // Update to show January of the next year
@@ -309,7 +309,7 @@ const handleNextMonthPeriod = () => {
 
 const handlePrevMonthPeriod = () => {
   const step = isMobile() ? 6 : 15;
-  if (resultData?.monthlyData) {
+  if (resultData?.MonthlyData) {
     if (currentMonthIndex > 0) {
       setCurrentMonthIndex(prevIndex => Math.max(prevIndex - step, 0));
     }
@@ -321,14 +321,14 @@ const getNextYearAvailable = () => {
   if (isMobile()) {
       return false; // No year transition needed for mobile monthly view
   }
-  return resultData?.monthlyData?.some(data => data.year === currentYear + 1) ?? false;
+  return resultData?.MonthlyData?.some(data => data.Year === currentYear + 1) ?? false;
 };
 
 const getPrevYearAvailable = () => {
   if (isMobile()) {
       return false; // No year transition needed for mobile monthly view
   }
-  return resultData?.monthlyData?.some(data => data.year === currentYear - 1) ?? false;
+  return resultData?.MonthlyData?.some(data => data.Year === currentYear - 1) ?? false;
 };
 
 
@@ -402,33 +402,33 @@ const getPrevYearAvailable = () => {
         <p>
           {t('timeperiodinfo')} <br></br> 
           <b>
-            {resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - 
-            {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}
+            {resultData.StartDate ? formatStartDateEndDate(resultData.StartDate) : 'N/A'} - 
+            {resultData.EndDate ? formatStartDateEndDate(resultData.EndDate) : 'N/A'}
           </b>
         </p>
         <p>
-          {t('cheaperOption')}<b> {resultData.cheaperOption === 'SpotPrice' ? t('spotElectricity') : t('fixedElectricity')}</b>
+          {t('cheaperOption')}<b> {resultData.CheaperOption === 'SpotPrice' ? t('spotElectricity') : t('fixedElectricity')}</b>
         </p>
-        {resultData.cheaperOption === 'SpotPrice' && (
-          <p><b>{t('equilevantFixedPriceBold')}</b>{t('equilevantFixedPrice')}<b> {resultData.equivalentFixedPrice?.toFixed(2)} {t('unit')} </b> </p>
+        {resultData.CheaperOption === 'SpotPrice' && (
+          <p><b>{t('equilevantFixedPriceBold')}</b>{t('equilevantFixedPrice')}<b> {resultData.EquivalentFixedPrice?.toFixed(2)} {t('unit')} </b> </p>
         )}
         <p className="price-difference">
-          {t('priceDifference')}: <b>{resultData.priceDifference?.toFixed(2) ?? 'N/A'} €</b>
+          {t('priceDifference')}: <b>{resultData.PriceDifference?.toFixed(2) ?? 'N/A'} €</b>
           
         </p>
         <p className="price-difference">
-          {t('optimizedPriceDifference')}: <b>{resultData.optimizedPriceDifference?.toFixed(2) ?? 'N/A'} €</b>
+          {t('optimizedPriceDifference')}: <b>{resultData.OptimizedPriceDifference?.toFixed(2) ?? 'N/A'} €</b>
         </p>
         <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
                                             <Help style={{ height: '35px', width: '35px'}} />
                                         </OverlayTrigger>
       </div>
       <div className="result-data-keywords">
-        <p>{t('totalConsumption')}: <span className="dynamic-value">{resultData.totalConsumption?.toFixed(2) ?? 'N/A'}</span> kWh</p>
-        <p>{t('spotElectricityPrice')}: <span className="dynamic-value">{resultData.totalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
-        <p>{t('fixedElectricityPrice')}: <span className="dynamic-value">{resultData.totalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
-        <p>{t('time')}: <span className="dynamic-value">{resultData.startDate ? formatStartDateEndDate(resultData.startDate) : 'N/A'} - {resultData.endDate ? formatStartDateEndDate(resultData.endDate) : 'N/A'}</span></p>
-        <p>{t('optimizedSpotElectricityPrice')}: <span className="dynamic-value">{resultData.totalOptimizedSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('totalConsumption')}: <span className="dynamic-value">{resultData.TotalConsumption?.toFixed(2) ?? 'N/A'}</span> kWh</p>
+        <p>{t('spotElectricityPrice')}: <span className="dynamic-value">{resultData.TotalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('fixedElectricityPrice')}: <span className="dynamic-value">{resultData.TotalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('time')}: <span className="dynamic-value">{resultData.StartDate ? formatStartDateEndDate(resultData.StartDate) : 'N/A'} - {resultData.EndDate ? formatStartDateEndDate(resultData.EndDate) : 'N/A'}</span></p>
+        <p>{t('optimizedSpotElectricityPrice')}: <span className="dynamic-value">{resultData.TotalOptimizedSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
 
       </div>
     </div>
@@ -466,7 +466,7 @@ const getPrevYearAvailable = () => {
       <Button onClick={handlePrevDayPeriod} disabled={currentDayIndex === 0}>
         {t('previous')}
       </Button>
-      <Button onClick={handleNextDayPeriod} disabled={currentDayIndex + (isMobile() ? 6 : 15) >= (resultData.dailyData?.length || 0)}>
+      <Button onClick={handleNextDayPeriod} disabled={currentDayIndex + (isMobile() ? 6 : 15) >= (resultData.DailyData?.length || 0)}>
         {t('next')}
       </Button>
     </div>
@@ -476,7 +476,7 @@ const getPrevYearAvailable = () => {
       <Button onClick={handlePrevWeekPeriod} disabled={currentWeekIndex === 0}>
         {t('previous')}
       </Button>
-      <Button onClick={handleNextWeekPeriod} disabled={currentWeekIndex + (isMobile() ? 6 : 15) >= (resultData.weeklyData?.length || 0)}>
+      <Button onClick={handleNextWeekPeriod} disabled={currentWeekIndex + (isMobile() ? 6 : 15) >= (resultData.WeeklyData?.length || 0)}>
         {t('next')}
       </Button>
     </div>
@@ -493,7 +493,7 @@ const getPrevYearAvailable = () => {
         </Button>
         <Button
             onClick={handleNextMonthPeriod}
-            disabled={currentMonthIndex + (isMobile() ? 6 : 15) >= (resultData?.monthlyData?.length || 0)}
+            disabled={currentMonthIndex + (isMobile() ? 6 : 15) >= (resultData?.MonthlyData?.length || 0)}
         >
             {t('next')}
         </Button>

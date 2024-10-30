@@ -1,36 +1,36 @@
 export interface DataParams {
   fixedPrice: number;
   csvFile?: File;
-  totalSpotPrice?: number;
-  totalFixedPrice?: number;
-  cheaperOption?: string;
-  totalConsumption?: number; 
-  startDate?: string;  
-  endDate?: string;    
-  priceDifference?: number;
-  equivalentFixedPrice?: number;
-  optimizedPriceDifference?: number;
-  totalOptimizedSpotPrice?: number;
-  dailyData?: Array<{
-    day: string;
-    spotPrice: number;
-    fixedPrice: number;
-    consumption: number;  
+  TotalSpotPrice?: number;
+  TotalFixedPrice?: number;
+  CheaperOption?: string;
+  TotalConsumption?: number; 
+  StartDate?: string;  
+  EndDate?: string;    
+  PriceDifference?: number;
+  EquivalentFixedPrice?: number;
+  OptimizedPriceDifference?: number;
+  TotalOptimizedSpotPrice?: number;
+  DailyData?: Array<{
+    Day: string;
+    SpotPrice: number;
+    FixedPrice: number;
+    Consumption: number;  
     
   }>;
-  weeklyData?: Array<{
-    year: number;
-    week: number;
-    spotPrice: number;
-    fixedPrice: number;
-    consumption: number;  
+  WeeklyData?: Array<{
+    Year: number;
+    Week: number;
+    SpotPrice: number;
+    FixedPrice: number;
+    Consumption: number;  
   }>;
-  monthlyData?: Array<{
-    year: number;
-    month: number;
-    spotPrice: number;
-    fixedPrice: number;
-    consumption: number;  
+  MonthlyData?: Array<{
+    Year: number;
+    Month: number;
+    SpotPrice: number;
+    FixedPrice: number;
+    Consumption: number;  
   }>;
 }
 

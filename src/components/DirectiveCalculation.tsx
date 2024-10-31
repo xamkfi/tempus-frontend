@@ -160,7 +160,7 @@ const ElectricityPriceForm: React.FC = () => {
             setSelectedWorkshiftType(newWorkShiftType)
            
             setShowErrors(false);
-            console.log(currentStep)
+            
             setFormData({
                 ...formData,
                 workShiftType: newWorkShiftType ? workShiftType.toString() : '' 
@@ -226,8 +226,7 @@ const ElectricityPriceForm: React.FC = () => {
             return;
         }
         
-        console.log(formData)
-        console.log(currentStep)
+        
         setValidationErrors([]);
         setShowErrors(false);
 
@@ -902,11 +901,10 @@ const ElectricityPriceForm: React.FC = () => {
           
         if (isMobile()) {
             months = months?.slice(currentMonthIndex, currentMonthIndex + maxItems);
-            console.log(months);
-            console.log(currentMonthIndex);
+            ;
         } else {
             months = months?.slice(0, maxItems);
-            console.log(months);
+            
         }
         return (
             <Container className="form-container">

@@ -9,7 +9,7 @@ export const FetchDataService = async (params: DataParams): Promise<DataParams> 
 
   try {
     const response = await axios.post(
-      `${process.env.REACT_APP_FINGRID_SERVICE_URL}?fixedPrice=${params.fixedPrice}`,
+      `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_FINGRID_PATH}?fixedPrice=${params.fixedPrice}`,
       formData,
       {
         headers: {

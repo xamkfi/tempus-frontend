@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import LanguageIcon from '@mui/icons-material/Language';
@@ -11,6 +11,31 @@ import GitHubIcon from '@mui/icons-material/GitHub';
  
 const Footer: React.FC = () => {
   const { t } = useTranslation();
+  const [isGitHubMenuOpen, setGitHubMenuOpen] = useState(false);
+  const githubDropdownRef = useRef<HTMLDivElement>(null);
+  const toggleGitHubMenu = () => {
+    setGitHubMenuOpen((prevState) => !prevState);
+  };
+
+  // Closes the dropdown when clicking outside
+  const handleClickOutside = (event: MouseEvent) => {
+    if (githubDropdownRef.current && !githubDropdownRef.current.contains(event.target as Node)) {
+      setGitHubMenuOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isGitHubMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isGitHubMenuOpen]);
+
   return (
     <footer className="footer w-100">
       <Container fluid>
@@ -45,13 +70,36 @@ const Footer: React.FC = () => {
               </a> 
               <a href="https://www.twitter.com/xamkfi" className="text-white">
                 <span className="footer-icon-container"><XIcon className="footer-icon" /></span>
-              </a> 
+              </a>
+
+              <div className="github-dropdown" ref={githubDropdownRef}>
+                <span className="footer-icon-container" onClick={toggleGitHubMenu}>
+                  <GitHubIcon className="footer-icon" />
+                </span>
+                {isGitHubMenuOpen && (
+                  <div className="github-dropdown-menu">
+                    <a href="https://github.com/xamkfi/tempus-frontend" className="text-white">
+                      Frontend
+                    </a>
+                    <a href="https://github.com/xamkfi/tempus-electrica-backend" className="text-white">
+                      Backend
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           </Col>
         </Row>
         <Row className='justify-content-center mt-3'>
           <Col md={6} className="text-center">
             <p className="text-white mb-0">{t('DataResource')} <a href="https://www.entsoe.eu/data/transparency-platform/" className="text-white">Entso-E</a></p>
+          </Col>
+        </Row>
+        <Row className='justify-content-center mt-3'>
+          <Col md={6} className="text-center">
+            <p className="text-white mb-0">
+              <a href="/privacy-notice" className="text-white">{t('privacy.header0')}</a> {/* Privacy Policy */}
+            </p>
           </Col>
         </Row>
       </Container>

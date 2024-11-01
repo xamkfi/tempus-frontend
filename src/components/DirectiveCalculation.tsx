@@ -118,7 +118,7 @@ const ElectricityPriceForm: React.FC = () => {
 
     const renderTooltip = (props: any) => (
         <BootstrapTooltip id="button-tooltip" {...props}>
-            It is usually estimated that normal electric car consumpts about 1500-2000kWh per year.
+            {t('carInfo')}
         </BootstrapTooltip>
     );
 
@@ -160,7 +160,7 @@ const ElectricityPriceForm: React.FC = () => {
             setSelectedWorkshiftType(newWorkShiftType)
            
             setShowErrors(false);
-            console.log(currentStep)
+            
             setFormData({
                 ...formData,
                 workShiftType: newWorkShiftType ? workShiftType.toString() : '' 
@@ -226,8 +226,7 @@ const ElectricityPriceForm: React.FC = () => {
             return;
         }
         
-        console.log(formData)
-        console.log(currentStep)
+        
         setValidationErrors([]);
         setShowErrors(false);
 
@@ -902,11 +901,10 @@ const ElectricityPriceForm: React.FC = () => {
           
         if (isMobile()) {
             months = months?.slice(currentMonthIndex, currentMonthIndex + maxItems);
-            console.log(months);
-            console.log(currentMonthIndex);
+            ;
         } else {
             months = months?.slice(0, maxItems);
-            console.log(months);
+            
         }
         return (
             <Container className="form-container">
@@ -942,9 +940,9 @@ const ElectricityPriceForm: React.FC = () => {
                                 <p className="price-difference">{t('priceDifference')} {result.CostDifference}€</p>
                             </div>
                             <div className="result-data-keywords">
-                                <p>{t('directiveConsumption')} <span className="dynamic-value">{result.TotalDirectiveConsumption}</span> kWh</p>
-                                <p>{t('spotElectricityPrice')} <span className="dynamic-value">{result.TotalSpotPriceCost}</span> €</p>
-                                <p>{t('fixedElectricityPrice')} <span className="dynamic-value">{result.TotalFixedPriceCost}</span> €</p>
+                                <p>{t('directiveConsumption')} <span className="dynamic-value">{result.EstimatedMinConsumption} - {result.EstimatedMaxConsumption}</span> kWh</p>
+                                <p>{t('spotElectricityPrice')} <span className="dynamic-value">{result.MinSpotPriceCost} - {result.MaxSpotPriceCost}</span> €</p>
+                                <p>{t('fixedElectricityPrice')} <span className="dynamic-value">{result.MinFixedPriceCost} - {result.MaxFixedPriceCost}</span> €</p>
                                 <p>{t('estimatedAverageHourlySpotPrice')} <span className="dynamic-value">{result.AverageHourlySpotPrice}</span> c/kWh</p>
                             </div>
                         </div>

@@ -937,7 +937,7 @@ const ElectricityPriceForm: React.FC = () => {
                                 <h3>{t('results')}</h3>
                                 <p>{t('resultDescription')} <b>{result.CalculationYears}</b></p>
                                 <p>{t('cheaperOptionDescription')} <b>{result.CheaperOption === 'Spot price' ? t('spotElectricity') : t('fixedElectricity') + ''}</b></p>
-                                <p className="price-difference">{t('priceDifference')} {result.CostDifference}€</p>
+                                <p className="price-difference">{t('averagepriceDifference')} {result.CostDifference}€</p>
                             </div>
                             <div className="result-data-keywords">
                                 <p>{t('directiveConsumption')} <span className="dynamic-value">{result.EstimatedMinConsumption} - {result.EstimatedMaxConsumption}</span> kWh</p>

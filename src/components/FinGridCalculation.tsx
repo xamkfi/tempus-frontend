@@ -413,11 +413,11 @@ const getPrevYearAvailable = () => {
           <p><b>{t('equilevantFixedPriceBold')}</b>{t('equilevantFixedPrice')}<b> {resultData.EquivalentFixedPrice?.toFixed(2)} {t('unit')} </b> </p>
         )}
         <p className="price-difference">
-          {t('priceDifference')}: <b>{resultData.PriceDifference?.toFixed(2) ?? 'N/A'} €</b>
+          {t('priceDifference')} <b>{resultData.PriceDifference?.toFixed(2) ?? 'N/A'} €</b>
           
         </p>
         <p className="price-difference">
-          {t('optimizedPriceDifference')}: <b>{resultData.OptimizedPriceDifference?.toFixed(2) ?? 'N/A'} €</b>
+          {t('optimizedPriceDifference')} <b>{resultData.OptimizedPriceDifference?.toFixed(2) ?? 'N/A'} €</b>
         </p>
         <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
                                             <Help style={{ height: '35px', width: '35px'}} />
@@ -425,10 +425,10 @@ const getPrevYearAvailable = () => {
       </div>
       <div className="result-data-keywords">
         <p>{t('totalConsumption')}: <span className="dynamic-value">{resultData.TotalConsumption?.toFixed(2) ?? 'N/A'}</span> kWh</p>
-        <p>{t('spotElectricityPrice')}: <span className="dynamic-value">{resultData.TotalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
-        <p>{t('fixedElectricityPrice')}: <span className="dynamic-value">{resultData.TotalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('spotElectricityPrice')} <span className="dynamic-value">{resultData.TotalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('fixedElectricityPrice')} <span className="dynamic-value">{resultData.TotalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
         <p>{t('time')}: <span className="dynamic-value">{resultData.StartDate ? formatStartDateEndDate(resultData.StartDate) : 'N/A'} - {resultData.EndDate ? formatStartDateEndDate(resultData.EndDate) : 'N/A'}</span></p>
-        <p>{t('optimizedSpotElectricityPrice')}: <span className="dynamic-value">{resultData.TotalOptimizedSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('optimizedSpotElectricityPrice')} <span className="dynamic-value">{resultData.TotalOptimizedSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
 
       </div>
     </div>

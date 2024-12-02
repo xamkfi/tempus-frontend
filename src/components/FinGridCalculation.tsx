@@ -443,7 +443,7 @@ const getPrevYearAvailable = () => {
         <p>{t('spotElectricityPrice')} <span className="dynamic-value">{resultData.TotalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
         <p>{t('fixedElectricityPrice')} <span className="dynamic-value">{resultData.TotalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
         <p>{t('time')}: <span className="dynamic-value">{resultData.StartDate ? formatStartDateEndDate(resultData.StartDate) : 'N/A'} - {resultData.EndDate ? formatStartDateEndDate(resultData.EndDate) : 'N/A'}</span></p>
-        <p>{t('optimizedSpotElectricityPrice')}: <span className="dynamic-value">{resultData.TotalOptimizedSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('optimizedSpotElectricityPrice')} <span className="dynamic-value">{resultData.TotalOptimizedSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
 
       </div>
     </div>

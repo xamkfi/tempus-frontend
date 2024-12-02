@@ -18,6 +18,7 @@ const FilterForm: React.FC = () => {
   const { t } = useTranslation();
   const [fixedPrice, setFixedPrice] = useState<number | ''>(10);
   const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [marginal, setMarginal] = useState<number>(0.00);
   const [resultData, setResultData] = useState<DataParams | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [timePeriod, setTimePeriod] = useState<'day' | 'week' | 'month'>('month'); // Default to month
@@ -54,6 +55,7 @@ const FilterForm: React.FC = () => {
     // Save state to localStorage whenever it changes
     localStorage.setItem('filterFormState', JSON.stringify({
       fixedPrice,
+      marginal,
       csvFile,
       resultData,
       error,
@@ -66,7 +68,7 @@ const FilterForm: React.FC = () => {
       showConsumption,
       currentMonthIndex,
     }));
-  }, [fixedPrice, csvFile, resultData, error, timePeriod, currentDayIndex, currentWeekIndex, currentYear, showSpotPrice, showFixedPrice, showConsumption]);
+  }, [fixedPrice, marginal, csvFile, resultData, error, timePeriod, currentDayIndex, currentWeekIndex, currentYear, showSpotPrice, showFixedPrice, showConsumption]);
 
   const renderTooltip = (props: any) => (
     <BootstrapTooltip id="button-tooltip" {...props}>
@@ -84,7 +86,8 @@ const FilterForm: React.FC = () => {
       const params: DataParams = {
         
         fixedPrice: Number(fixedPrice),
-        csvFile
+        csvFile,
+        ...(marginal !== 0.00 && {marginal})
       }
  
       try {
@@ -357,35 +360,47 @@ const getPrevYearAvailable = () => {
         </div>
       </div>
       <Form onSubmit={handleSubmit}>
-        <Row>
-          <Col xs={12} md={6} className="mb-3">
-            <Form.Group controlId="fixedPrice">
-              <Form.Label>{t('enterFixedPrice')}{t('unit')}</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder={t('enterFixedPrice')}
-                value={fixedPrice}
-                onChange={(e) => setFixedPrice(parseFloat(e.target.value) || '')}
-              />
-            </Form.Group>
-          </Col>
-          <Col xs={12} md={6} className="mb-3">
-            <Form.Group controlId="csvFile">
-              <Form.Label>{t('csvFile')}:</Form.Label>
-              <Form.Control
-                type="file"
-                accept=".csv"
-                onChange={handleFileChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col xs={12} className="mb-3">
-            <Button variant="primary" type="submit" className="submit-button">
-              {t('submit')}
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+  <Row>
+    <Col xs={12} md={6} className="mb-3">
+      <Form.Group controlId="fixedPrice">
+        <Form.Label>{t('enterFixedPrice')}{t('unit')}</Form.Label>
+        <Form.Control
+          type="number"
+          placeholder={t('enterFixedPrice')}
+          value={fixedPrice}
+          onChange={(e) => setFixedPrice(parseFloat(e.target.value) || '')}
+        />
+      </Form.Group>
+    </Col>
+    <Col xs={12} md={6} className="mb-3">
+      <Form.Group controlId="csvFile">
+        <Form.Label>{t('csvFile')}:</Form.Label>
+        <Form.Control
+          type="file"
+          accept=".csv"
+          onChange={handleFileChange}
+        />
+      </Form.Group>
+    </Col>
+    <Col xs={12} md={6} className="mb-3">
+      <Form.Group controlId="marginal">
+        <Form.Label>{t('enterMarginal')}{t('unit')}</Form.Label>
+        <Form.Control
+          type="number"
+          step="0.01"
+          placeholder={t('enterMarginal')}
+          value={marginal}
+          onChange={(e) => setMarginal(parseFloat(e.target.value) || 0.00)}
+        />
+      </Form.Group>
+    </Col>
+    <Col xs={12} className="mb-3">
+      <Button variant="primary" type="submit" className="submit-button">
+        {t('submit')}
+      </Button>
+    </Col>
+  </Row>
+</Form>
       {loading && (
         <div className="loading-animation-container">
           <div className="loading-animation">
@@ -413,11 +428,11 @@ const getPrevYearAvailable = () => {
           <p><b>{t('equilevantFixedPriceBold')}</b>{t('equilevantFixedPrice')}<b> {resultData.EquivalentFixedPrice?.toFixed(2)} {t('unit')} </b> </p>
         )}
         <p className="price-difference">
-          {t('priceDifference')}: <b>{resultData.PriceDifference?.toFixed(2) ?? 'N/A'} €</b>
+          {t('priceDifference')} <b>{resultData.PriceDifference?.toFixed(2) ?? 'N/A'} €</b>
           
         </p>
         <p className="price-difference">
-          {t('optimizedPriceDifference')}: <b>{resultData.OptimizedPriceDifference?.toFixed(2) ?? 'N/A'} €</b>
+          {t('optimizedPriceDifference')} <b>{resultData.OptimizedPriceDifference?.toFixed(2) ?? 'N/A'} €</b>
         </p>
         <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
                                             <Help style={{ height: '35px', width: '35px'}} />
@@ -425,8 +440,8 @@ const getPrevYearAvailable = () => {
       </div>
       <div className="result-data-keywords">
         <p>{t('totalConsumption')}: <span className="dynamic-value">{resultData.TotalConsumption?.toFixed(2) ?? 'N/A'}</span> kWh</p>
-        <p>{t('spotElectricityPrice')}: <span className="dynamic-value">{resultData.TotalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
-        <p>{t('fixedElectricityPrice')}: <span className="dynamic-value">{resultData.TotalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('spotElectricityPrice')} <span className="dynamic-value">{resultData.TotalSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
+        <p>{t('fixedElectricityPrice')} <span className="dynamic-value">{resultData.TotalFixedPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
         <p>{t('time')}: <span className="dynamic-value">{resultData.StartDate ? formatStartDateEndDate(resultData.StartDate) : 'N/A'} - {resultData.EndDate ? formatStartDateEndDate(resultData.EndDate) : 'N/A'}</span></p>
         <p>{t('optimizedSpotElectricityPrice')}: <span className="dynamic-value">{resultData.TotalOptimizedSpotPrice?.toFixed(2) ?? 'N/A'}</span> €</p>
 

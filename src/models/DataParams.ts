@@ -1,6 +1,7 @@
 export interface DataParams {
   fixedPrice: number;
   csvFile?: File;
+  marginal?: number;
   TotalSpotPrice?: number;
   TotalFixedPrice?: number;
   CheaperOption?: string;

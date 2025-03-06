@@ -1,5 +1,5 @@
 
-export async function DefaultPrices(timePeriod: string){
+export async function FetchElectricityPricesService(timePeriod: string){
   
   const today = new Date();
   let startDate;

@@ -1,6 +1,6 @@
 import {  Container,  Button } from 'react-bootstrap';
 import { Bar } from 'react-chartjs-2';
-import { DefaultPrices } from '../services/FetchElectricityPrices';
+import { FetchElectricityPricesService } from '../services/FetchElectricityPricesService';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Lottie from 'lottie-react';
@@ -25,7 +25,7 @@ export default function PricesChart(){
         setPrices(JSON.parse(storedData));
       }
       else{
-        TuoJaFormatoiData();
+        GetAndFormateData();
       }
     },[timePeriod])
     
@@ -41,10 +41,10 @@ export default function PricesChart(){
       return isMobile;
     })
 
-    async function TuoJaFormatoiData(){
+    async function GetAndFormateData(){
 
       setLoading(true);
-      const data: Price[] = await DefaultPrices(timePeriod);
+      const data: Price[] = await FetchElectricityPricesService(timePeriod);
       let formattedData: Price[] = [];
       const sortedData = [...data].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 

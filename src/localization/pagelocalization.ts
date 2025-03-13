@@ -182,6 +182,15 @@ const resources = {
     "content12": "We reserve the right to update this privacy policy as necessary due to the development of the Application or changes in legislation. Significant changes will be communicated through the Application or on our website. We recommend that users regularly review the privacy policy.",
     "header13": "13. Contact Information",
     "content13": "If you have any questions about this privacy policy or the processing of your data, please contact:\n\nKaakkois-Suomen Ammattikorkeakoulu – XAMK\n\nDevelopment and Research Unit Active Life Lab\n\nBusiness ID: 2472908-2\n\nAddress: PL 68 (Patteristonkatu 3)\n\n50101 Mikkeli\n\nPhone switchboard: +358406550555\n\nPerson Responsible for the Register\n\nName: Tuomas Reijonen\n\nEmail: tuomas.reijonen@xamk.fi\n\nPhone: +358406550555"
+  },
+  "chart":{
+    "x": "time",
+    "y": "cent/kWh",
+    "chartTitleDay": "Todays prices",
+    "chartTitleWeek": "Prices for the week",
+    "chartTitleMonth": "Monthly prices",
+    "chartTitleToday": "Hourly prices today",
+    "label": "cent/kWh"
   }
     }
   },
@@ -359,6 +368,15 @@ const resources = {
     "content12": "Pidätämme oikeuden päivittää tätä tietosuojakäytäntöä tarvittaessa Sovelluksen kehityksen tai lainsäädännön muutosten myötä. Mahdollisista merkittävistä muutoksista tiedotetaan Sovelluksen kautta tai verkkosivustollamme. Suosittelemme käyttäjiä tutustumaan tietosuojakäytäntöön säännöllisesti.",
     "header13": "13. Yhteystiedot",
     "content13": "Jos sinulla on kysyttävää tästä tietosuojakäytännöstä tai tietojesi käsittelystä, ota yhteyttä:\n\nKaakkois-Suomen Ammattikorkeakoulu – XAMK\n\nKehitys- ja tutkimusyksikkö Active Life Lab\n\nY-tunnus: 2472908-2\n\nOsoite: PL 68 (Patteristonkatu 3)\n\n50101 Mikkeli\n\nPuhelinvaihde: +358406550555\n\nRekisteristä vastaava henkilö\n\nNimi: Tuomas Reijonen\n\nSähköposti: tuomas.reijonen@xamk.fi\n\nPuhelin: +358406550555"
+  },
+  "chart":{
+    "x": "aika",
+    "y": "snt/kWh",
+    "label": "snt/kWh",
+    "chartTitleDay": "Päivän hinnat",
+    "chartTitleWeek": "Viikon hinnat",
+    "chartTitleMonth": "Hinnat kuukausittain",
+    "chartTitleToday": "Tuntihinnat tänään",
   }
     }
   }

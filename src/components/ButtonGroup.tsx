@@ -8,7 +8,7 @@ interface ButtonGroupProps {
   setActiveService: (service: string) => void;
 }
 
-const ButtonGroup: React.FC<ButtonGroupProps> = ({ activeService, setActiveService }) => {
+const ButtonGroup = ({ activeService, setActiveService }: ButtonGroupProps) => {
   const { t } = useTranslation();
 
   return (

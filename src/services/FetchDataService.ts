@@ -14,7 +14,7 @@ export const FetchDataService = async (params: DataParams): Promise<DataParams> 
 
   try {
     const response = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_FINGRID_PATH}?${queryString}`,
+      `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_FINGRID_PATH}?${queryString}`,
       formData,
       {
         headers: {

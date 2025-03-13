@@ -29,7 +29,7 @@ export const calculatePriceAndConsumption = async (formData: FormDataParams): Pr
         }
     });
 
-    const response = await fetch(`${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_CALCULATION_PATH}?${queryParams}`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_CALCULATION_PATH}?${queryParams}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

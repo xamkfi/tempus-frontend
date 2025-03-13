@@ -11,7 +11,7 @@ import ButtonGroup from './components/ButtonGroup';
 import Footer from './components/Footer'; 
 import PricesChart from './components/PricesChart';
 
-const App: React.FC = () => {
+const App = () => {
   const [activeService, setActiveService] = useState<string>('fingrid');
   const { t } = useTranslation();
 

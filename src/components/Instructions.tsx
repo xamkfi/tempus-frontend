@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import '../styles/instructions.css';
 import Header from './Header'; 
 import Footer from './Footer';
-const Instructions: React.FC = () => {
+const Instructions = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
 

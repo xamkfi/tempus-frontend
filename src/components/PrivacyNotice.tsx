@@ -5,7 +5,7 @@ import '../styles/Privacynotice.css';
 import Header from './Header'; 
 import Footer from './Footer';
 
-const PrivacyNotice: React.FC = () => {
+const PrivacyNotice = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
 

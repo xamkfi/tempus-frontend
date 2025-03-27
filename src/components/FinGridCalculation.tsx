@@ -14,7 +14,7 @@ import { Tooltip as BootstrapTooltip } from 'react-bootstrap';
 import { Help } from '@mui/icons-material';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
-const FilterForm: React.FC = () => {
+const FilterForm = () => {
   const { t } = useTranslation();
   const [fixedPrice, setFixedPrice] = useState<number | ''>(10);
   const [csvFile, setCsvFile] = useState<File | null>(null);

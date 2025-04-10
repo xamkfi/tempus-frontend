@@ -42,7 +42,7 @@ type HouseType = 'Apartmenthouse' | 'Terracedhouse' | 'Detachedhouse' | 'Cottage
 type WorkShiftType = 'DayWorker' | 'ShiftWorker' | 'RemoteWorker';
 type HeatingType = 'ElectricHeating' | 'DistrictHeating' | 'GeothermalHeating' | 'OilHeating';
 
-const ElectricityPriceForm: React.FC = () => {
+const ElectricityPriceForm = () => {
     
     const [formData, setFormData] = useState<FormDataParams>(initialFormData);
     const [result, setResult] = useState<CalculationResult | null>(null);

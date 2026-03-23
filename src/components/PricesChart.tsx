@@ -16,7 +16,7 @@ export default function PricesChart(){
 
     const { t } = useTranslation();
     const [prices, setPrices] = useState<Price[]>([]);
-    const [timePeriod, setTimePeriod] = useState<"today" | "week" | "month">("today")
+    const [timePeriod, setTimePeriod] = useState<"15minute" | "today" | "week" | "month">("15minute")
     const [loading, setLoading] = useState(false);
 
     useEffect(()=>{
@@ -47,26 +47,41 @@ export default function PricesChart(){
       const data: Price[] = await FetchElectricityPricesService(timePeriod);
       let formattedData: Price[] = [];
       const sortedData = [...data].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
       switch (timePeriod) {
-        case "today":
-      
+        case "15minute":
           formattedData = sortedData.map((item) => ({
-            ...item,
-            date: new Date(item.date).toLocaleTimeString("fi-FI", {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-          }));
+              ...item,
+              date: new Date(item.date).toLocaleTimeString("fi-FI", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+            }));
+          break;
+
+        case "today":
+          const hours: Record<string, { total: number; count: number }> = {};
+            sortedData.forEach(item => {
+              const dateObj = new Date(item.date);
+              const formattedDate = `${dateObj.getHours()}`; // Format as "HH"
+              if (!hours[formattedDate]) {
+                hours[formattedDate] = { total: 0, count: 0 };
+              }
+          
+              hours[formattedDate].total += item.value;
+              hours[formattedDate].count += 1;
+            });
+            formattedData = Object.keys(hours).map(date => ({
+              date,
+              value: Number((hours[date].total / hours[date].count).toFixed(2)), // Compute average
+            }));
+            formattedData.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime())
           break;
 
           case "week":
             const dictionary: Record<string, { total: number; count: number }> = {};
-          
             sortedData.forEach(item => {
               const dateObj = new Date(item.date);
               const formattedDate = `${dateObj.getDate()}.${dateObj.getMonth() + 1}.${dateObj.getFullYear()}`; // Format as "DD.MM.YYYY"
-          
               if (!dictionary[formattedDate]) {
                 dictionary[formattedDate] = { total: 0, count: 0 };
               }
@@ -74,12 +89,11 @@ export default function PricesChart(){
               dictionary[formattedDate].total += item.value;
               dictionary[formattedDate].count += 1;
             });
-
             formattedData = Object.keys(dictionary).map(date => ({
               date,
               value: Number((dictionary[date].total / dictionary[date].count).toFixed(2)), // Compute average
             }));
-            formattedData.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime());
+            formattedData.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime())
             break;
           
         
@@ -89,7 +103,7 @@ export default function PricesChart(){
             sortedData.forEach(item => {
               const dateObj = new Date(item.date);
               const yearMonth = `${dateObj.getFullYear()}-${dateObj.getMonth() + 1}`; // "YYYY-MM"
-          
+              
               if (!monthlyDictionary[yearMonth]) {
                 monthlyDictionary[yearMonth] = { total: 0, count: 0 };
               }
@@ -124,7 +138,7 @@ export default function PricesChart(){
           position: "top" as const,
         },
         datalabels: {
-          display: !isMobile(), 
+          display: !isMobile() && timePeriod != "15minute", 
         },
       },
       scales: {
@@ -162,6 +176,9 @@ export default function PricesChart(){
 
     function RenderTitle(){
       switch (timePeriod) {
+        case "15minute":
+          return <h3>{t("chart.chartTitle15minute")}</h3>
+        
         case "today":
           return <h3>{t("chart.chartTitleToday")}</h3>
 
@@ -194,6 +211,12 @@ export default function PricesChart(){
         </Container>
         
         <div className='filter-options'>
+          <Button 
+            onClick={()=>setTimePeriod("15minute")}
+            className={timePeriod=="15minute" ? "btn selected" : "btn"}
+          >
+          {t('15minute')}
+          </Button>
           <Button 
             onClick={()=>setTimePeriod("today")}
             className={timePeriod=="today" ? "btn selected" : "btn"}

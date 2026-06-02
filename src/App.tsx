@@ -6,7 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import './App.css';
 import Header from './components/Header';
-import InfoBox from './components/InfoBox'; 
+import InfoBox from './components/InfoBox';
+import SolarBatteryPromo from './components/SolarBatteryPromo';
 import ButtonGroup from './components/ButtonGroup'; 
 import Footer from './components/Footer'; 
 import PricesChart from './components/PricesChart';
@@ -39,11 +40,22 @@ const App = () => {
     }
   };
 
+  const scrollToCalculator = () => {
+    setActiveService('fingrid');
+    window.setTimeout(() => {
+      document.getElementById('calculator-section')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 100);
+  };
+
   return (
     <div className="App">
       <Header />
       <Container fluid>
-        <InfoBox />
+        <InfoBox onGoToCalculator={scrollToCalculator} />
+        <SolarBatteryPromo />
 
         <Row className="justify-content-center">
           <Col md={8}>
@@ -51,12 +63,14 @@ const App = () => {
           </Col>
         </Row> 
 
-        <ButtonGroup activeService={activeService} setActiveService={setActiveService} />
-        <Row className="justify-content-center">
-          <Col md={8}>
-            {renderService()}
-          </Col>
-        </Row>
+        <div id="calculator-section">
+          <ButtonGroup activeService={activeService} setActiveService={setActiveService} />
+          <Row className="justify-content-center">
+            <Col md={8}>
+              {renderService()}
+            </Col>
+          </Row>
+        </div>
       </Container>
       <Footer />
     </div>
